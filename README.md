@@ -21,7 +21,7 @@ To extend the baseline paradigm provided by the curriculum and achieve an *Excel
 ---
 
 ## Repository Structure
-
+```
 .
 ├── TMLPA_PSO_JQ.ipynb            # Core workspace containing problem definitions & Swarms
 ├── minizinc/                     # Exact validation layer directory
@@ -31,7 +31,7 @@ To extend the baseline paradigm provided by the curriculum and achieve an *Excel
 │   └── instance_large.dzn        # Stress-test problem matrix (20 Hubs, 50 Clients)
 ├── Report.pdf                    # Rendered LaTeX PDF report
 └── README.md                     # Technical project documentation (This file)
-
+```
 ---
 
 ## Experimental Framework & Evaluation Metrics
@@ -89,6 +89,3 @@ Experimental outputs reveal a distinct architectural contrast as logistical boun
 **Institutional Affiliation:** Escuela de Ingeniería Informática, Universidad de Valparaíso, Chile.
 
 **Course Context:** Inteligencia Artificial Aplicada: Inteligencia de Enjambre (2026)
-
-```
-
