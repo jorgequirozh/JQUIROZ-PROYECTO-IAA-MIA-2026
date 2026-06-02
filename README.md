@@ -1,5 +1,3 @@
-
-```text
 # Multi-Scale Metaheuristic and Exact Optimization Framework for the TMLPA Problem
 
 This repository hosts an advanced optimization suite designed to solve the **Two-Level Temporary Microhub Location and Pedestrian Assignment (TMLPA)** problem. The framework implements and benchmarks two prominent swarm intelligence metaheuristics—**Binary Particle Swarm Optimization (BPSO)** and a custom-engineered **Binary Walrus Optimizer (BWO)**—against an exact mathematical reference model compiled via **MiniZinc**.
@@ -36,7 +34,7 @@ To extend the baseline paradigm provided by the curriculum and achieve an *Excel
 
 ---
 
-## 🔬 Experimental Framework & Evaluation Metrics
+## Experimental Framework & Evaluation Metrics
 
 All metaheuristic evaluations execute a strict sequence of 30 independent stochastic runs utilizing changing pseudo-random seeds. This structure insulates metrics from statistical bias and allows the evaluation engine to track performance through the following advanced swarm indices:
 
@@ -48,7 +46,7 @@ All metaheuristic evaluations execute a strict sequence of 30 independent stocha
 
 ---
 
-## 🛠️ Execution and Replication Steps
+## Execution and Replication Steps
 
 ### Phase 1: Metaheuristic Multi-Scale Analysis (Python)
 Ensure you have numpy, pandas, and matplotlib installed. Open the Jupyter Notebook, navigate to the final appended performance suite cell, and run the macro script:
