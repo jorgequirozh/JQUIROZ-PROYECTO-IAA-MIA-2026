@@ -1,6 +1,5 @@
 # Multi-Scale Metaheuristic and Exact Optimization Framework for the TMLPA Problem
-
-This repository hosts an advanced optimization suite designed to solve the **Two-Level Temporary Microhub Location and Pedestrian Assignment (TMLPA)** problem. The framework implements and benchmarks two prominent swarm intelligence metaheuristics—**Binary Particle Swarm Optimization (BPSO)** and a custom-engineered **Binary Walrus Optimizer (BWO)**—against an exact mathematical reference model compiled via **MiniZinc**.
+This repository contains the source code, constraint programming formulations, data models, and empirical benchmarking suites developed for the Two-Echelon Microhub Location-Allocation Problem (TMLPA) within an urban logistics context (Valparaíso Pilot). The project evaluates a proposed Binary Walrus Optimizer (BWO) against a classical Binary Particle Swarm Optimization (BPSO) baseline, validated against exact mathematical programming ground truths compiled via MiniZinc.
 
 ---
 
@@ -21,71 +20,73 @@ To extend the baseline paradigm provided by the curriculum and achieve an *Excel
 ---
 
 ## Repository Structure
+
+The layout of the project workspace is structured as follows:
 ```
 .
-├── TMLPA_PSO_JQ.ipynb            # Core workspace containing problem definitions & Swarms
-├── minizinc/                     # Exact validation layer directory
-│   ├── tmlpa_model.mzn           # Formal MiniZinc constraint optimization model
-│   ├── instance_small.dzn        # Data file mapping exactly to python Instance 0
-│   ├── instance_medium.dzn       # Escalated problem matrix (10 Hubs, 25 Clients)
-│   └── instance_large.dzn        # Stress-test problem matrix (20 Hubs, 50 Clients)
-├── Report.pdf                    # Rendered LaTeX PDF report
-└── README.md                     # Technical project documentation (This file)
-```
----
-
-## Experimental Framework & Evaluation Metrics
-
-All metaheuristic evaluations execute a strict sequence of 30 independent stochastic runs utilizing changing pseudo-random seeds. This structure insulates metrics from statistical bias and allows the evaluation engine to track performance through the following advanced swarm indices:
-
-1. **Descriptive Baseline Dispersion:** Extracts the Minimum (Best), Maximum (Worst), Arithmetic Mean, and Standard Deviation across all valid runs.
-2. **Outlier Filtering (IQR Method):** Programmatically identifies and isolates anomalous trace runs using the Interquartile Range bounding rule before averaging final values.
-3. **Success Rate (SRate in [0,1]):** Measures the mathematical ratio of independent trial tracks that successfully discover the global optimum cost found by MiniZinc within a variance envelope epsilon <= 0.01.
-4. **Success Speed (SSpeed in [0,1]):** Analyzes optimization velocity by evaluating the exact objective calculation index where the final optimum layout was locked:
-   SSpeed_r = (MaxFES - (FES_r - 1)) / MaxFES
-
----
-
-## Execution and Replication Steps
-
-### Phase 1: Metaheuristic Multi-Scale Analysis (Python)
-Ensure you have numpy, pandas, and matplotlib installed. Open the Jupyter Notebook, navigate to the final appended performance suite cell, and run the macro script:
-
-```python
-# The evaluation block automatically executes 30 clean independent loops
-# and generates LaTeX ready tables and comparative boxplots.
-generate_academic_reporting_artifacts(
-    pso_histories=all_pso_runs, 
-    walrus_histories=all_walrus_runs, 
-    target_optimum=76.90,  # Validated baseline cost from MiniZinc Instance 0
-    max_iterations=100
-)
+├── README.md                     # Project documentation and execution instructions
+├── TMLPA_Optimization.ipynb      # Main Jupyter Notebook containing swarms and analysis
+├── minizinc/                     # Constraint Programming environment
+│   ├── tmlpa_model.mzn           # Core MiniZinc optimization model
+│   ├── instance_small.dzn        # Small-scale test instance dataset (3 Hubs / 5 Clients)
+│   ├── instance_medium.dzn       # Medium-scale challenge instance (10 Hubs / 25 Clients)
+│   └── instance_large.dzn        # Large-scale stress-test instance (20 Hubs / 50 Clients)
+└── report/                       # Academic manuscript files (Elsevier Format)
+    ├── main.tex                  # LaTeX main source document
+    ├── refs.bib                  # BibTeX bibliography references
+    ├── elsarticle.cls            # Elsevier document class style
+    ├── elsarticle-num.bst        # Numerical reference style
+    ├── report.PDF                # Compiled academic paper
+    └── img/                      # Graphical assets for documentation
+        └── fig1.png              # Network layout diagram
 
 ```
+## Problem Definition Overview
 
-### Phase 2: Exact Ground-Truth Extraction (MiniZinc)
+The TMLPA model addresses a multi-capacity, distance-constrained network optimization challenge designed to minimize total infrastructure operational expenditure ($f_o$). The objective function balances two primary cost mechanisms:
 
-To extract the comparative perfect solutions for Medium and Large dimensions:
+1. **Fixed Installation Costs**: Capital expenditures incurred by activating specific structural microhubs.
+2. **Variable Processing Costs**: Volumetric transport and operation penalties calculated from customer demand metrics weighted by real Euclidean walking distances.
 
-1. Open the MiniZinc IDE and load /minizinc/tmlpa_model.mzn.
-2. Connect an exact engine solver backend (e.g., Gurobi or COIN-OR CBC).
-3. Bind your targeted scale configuration (e.g., /minizinc/instance_medium.dzn) and execute.
-4. Record the calculated optimum cost values and process times, then insert them into your LaTeX manuscript comparison tables (main.tex).
+Operational feasibility is explicitly governed by strict distance ceilings ($d_{max}$), individual hub volumetric handling boundaries ($L$), and structural constraints limiting the total number of simultaneous open hubs ($P_{min}$ and $P$).
 
----
+## Algorithmic Strategy
 
-## Summary Benchmark Performance Trends
+The metaheuristic optimization engine employs a decoupled architecture to maintain structural backward compatibility while handling scalability constraints:
 
-Experimental outputs reveal a distinct architectural contrast as logistical boundaries scale up:
+* **Base Classes (Immutable)**: Contains the original `TMLPAProblem` data framework and the baseline `Particle` and `PSOSolver` blueprints provided in the curriculum core.
+* **Intelligent Greedy Routing Module**: A deterministic repair layer that replaces blind stochastic routing choices. It automatically assigns demand nodes to the nearest open hub while monitoring remaining capacity boundaries. If no feasible layout exists for a given binary hub configuration, it is heavily penalized.
+* **Proposed Walrus Optimizer**: A custom implementation adapted for discrete search spaces, integrating herd-gathering and migration behaviors to navigate non-linear decision spaces.
+* **Polymorphic Extensions (`GreedyParticle` / `GreedyPSOSolver`)**: Object-oriented subclasses that inject the greedy repair protocol into the continuous-to-binary velocity equations without altering the underlying mathematical equations of the baseline algorithm.
 
-* **Small Dimensions:** Both BPSO and BWO achieve 100% precision (SRate = 1.00), matching MiniZinc's exact cost of 76.90 under 0.5 seconds.
-* **Medium Dimensions:** BPSO experiences premature convergence and structural stagnation due to vector fragmentation. BWO stabilizes and captures the absolute mathematical minimum significantly faster than MiniZinc, which experiences a notable linear programming search space explosion.
-* **Large Dimensions:** MiniZinc encounters a combinatorial explosion, triggering a hard 1-hour timeout without asserting absolute convergence. The proposed Binary Walrus Optimizer leverages its exploratory risk-driven mechanics to circumvent local optima, providing high-quality feasible solution matrices in under 10 seconds.
+## Execution and Benchmarking Guide
 
----
+### Prerequisites
 
-**Author:** Jorge Quiroz
+The environment must contain a standard Python 3.8+ deployment along with the following numerical and data-science packages:
 
-**Institutional Affiliation:** Escuela de Ingeniería Informática, Universidad de Valparaíso, Chile.
+* `numpy`
+* `pandas`
+* `matplotlib`
 
-**Course Context:** Inteligencia Artificial Aplicada: Inteligencia de Enjambre (2026)
+To run exact mathematical validations, a working installation of the MiniZinc IDE or CLI bundled with an active Mixed-Integer Programming or Constraint Programming solver (such as COPT, Gurobi, or Chuffed) is required.
+
+### Executing Metaheuristic Sweeps
+
+1. Open `TMLPA_Optimization.ipynb` in a Jupyter notebook environment.
+2. Execute all cell blocks sequentially to register the underlying classes, configurations, and analytical metrics.
+3. The notebook isolates scale execution into dedicated standalone blocks at the bottom of the workspace:
+* **Valparaíso Pilot Unit Test**: Evaluates a single trace to plot the direct convergence profile against a geographic network topology map.
+* **Batch Runner Cells**: Triggers 30 independent stochastic loops with unique random seed isolation for `"instance_small.dzn"`, `"instance_medium.dzn"`, and `"instance_large.dzn"`.
+
+
+
+### Interpreting Outputs
+
+The evaluation routine implements Interquartile Range (IQR) filtering to isolate statistical anomalies and computes metrics for performance evaluation:
+
+* **Success Rate ($SRate$)**: Percentage of runs that converge within an $\epsilon = 0.01$ threshold of the MiniZinc global minimum.
+* **Success Speed ($SSpeed$)**: Normalized convergence rate evaluating the speed at which the swarm hits the target floor.
+
+The script outputs structured tabular summaries alongside their corresponding formatted LaTeX codes ready for direct insertion into `main.tex`, followed by a boxplot displaying objective function cost dispersion.
+
