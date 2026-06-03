@@ -36,3 +36,17 @@ SSpeed & 0.0000 & 0.0000 \\
 ============================= STATISTICAL INFERENCE =============================
 Mann-Whitney-Wilcoxon Test: U-Statistic = 10.50 | p-value = 0.00000
 ====================================================================================
+
+========================= URBAN TOPOLOGY VALIDATION =========================
+Target Instance File:               instance_large.dzn
+HiGHS Exact Global Optimum Cost:    915.20
+-----------------------------------------------------------------------------
+Binary PSO Baseline Best Found Cost:       920.3000000000002
+Binary PSO Baseline Best Layout (y):       [0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0]
+-----------------------------------------------------------------------------
+Binary Walrus Proposed Best Found Cost:    933.0999999999999
+Binary Walrus Proposed Best Layout (y):    [0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0]
+-----------------------------------------------------------------------------
+BPSO Optimization Gap to Global Bounds:   0.56%
+BWO Optimization Gap to Global Bounds:    1.96%
+=============================================================================

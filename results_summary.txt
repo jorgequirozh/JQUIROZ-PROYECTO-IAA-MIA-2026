@@ -12,15 +12,16 @@ Generational Depth: 100 Iterations per Sweep
 MiniZinc Exact Global Optimum: 84.2000
 
 Metaheuristic Matrix Performance:
-                             Best  Worst  Mean        StdDev  SRate  SSpeed  Outliers
-Binary PSO (Baseline)        84.2   84.2  84.2  2.842171e-14    1.0    1.01         0
-Walrus Optimizer (Proposed)  84.2   84.2  84.2  2.842171e-14    1.0    1.01         0
+                             Best    Worst     Mean   StdDev    SRate   SSpeed  Outliers
+Binary PSO (Baseline)       84.2000  84.2000  84.2000   0.0000   1.0000   1.0100         0
+Walrus Optimizer (Proposed) 84.2000  84.2000  84.2000   0.0000   1.0000   1.0100         0
 
 Academic Notes:
 Both solvers achieve absolute structural stability with identical metrics. The 
 Intelligent Greedy Routing module completely dominates this scale, guaranteeing 
-100% precision (SRate = 1.0) and hitting the exact mathematical optimum 
-under 0.5 seconds.
+100% precision (SRate = 1.0000) and hitting the exact mathematical optimum 
+under 0.5 seconds. The Mann-Whitney-Wilcoxon p-value of 1.00000 confirms that there 
+is no statistically significant distribution variance at this scale.
 
 --------------------------------------------------------------------------------
 2. EXPERIMENT: INSTANCE_MEDIUM.DZN (10 HUBS X 25 CLIENTS)
@@ -28,18 +29,24 @@ under 0.5 seconds.
 MiniZinc Exact Global Optimum: 452.0000
 
 Metaheuristic Matrix Performance:
-                             Best  Worst     Mean        StdDev  SRate  SSpeed  Outliers
-Binary PSO (Baseline)        461.0  461.0  461.000  5.684342e-14    0.0     0.0         0
-Walrus Optimizer (Proposed)  464.8  473.5  469.275  2.330179e+00    0.0     0.0         2
+                             Best    Worst     Mean   StdDev    SRate   SSpeed  Outliers
+Binary PSO (Baseline)      461.0000 461.0000 461.0000   0.0000   0.0000   0.0000         0
+Walrus Optimizer (Proposed)464.8000 473.5000 468.9767   2.5127   0.0000   0.0000         2
 
 Academic Notes:
-The exact mathematical optimum is established at 452.00 via parallelized HiGHS 
+The exact mathematical optimum is established at 452.0000 via parallelized HiGHS 
 MILP branch mapping on the Intel Xeon E-2124. Both metaheuristic swarms failed 
-to discover this target due to a deceptive multi-modal local optimum sink 
-situated at 461.00. The baseline BPSO demonstrates severe premature convergence, 
-stagnation, and complete loss of velocity diversity (StdDev = 5.68e-14). The 
-Walrus Optimizer maintains active solution exploration (StdDev = 2.33), 
-indicating a healthier distribution profile across non-linear allocation barriers.
+to discover this target due to a deceptive multi-modal local optimum sink. 
+The baseline BPSO demonstrates severe premature convergence, stagnation, and complete 
+loss of velocity diversity (StdDev = 0.0000), consistently trapping all 30 sweeps 
+at a localized cost plateau of 461.0000 (+1.99% optimization gap). The Walrus Optimizer 
+maintains active solution exploration (StdDev = 2.5127), yielding a best value of 
+464.8000 (+2.83% optimization gap) across non-linear allocation barriers. 
+
+A dynamic statistical filter identified and replaced 2 operational outliers at runtime 
+to protect sample integrity. The Mann-Whitney-Wilcoxon non-parametric evaluation 
+returns a U-Statistic of 0.00 and a p-value of 0.00000, revealing a highly significant 
+distributional divergence between the two algorithmic frameworks.
 
 --------------------------------------------------------------------------------
 3. EXPERIMENT: INSTANCE_LARGE.DZN (20 HUBS X 50 CLIENTS)
@@ -47,16 +54,21 @@ indicating a healthier distribution profile across non-linear allocation barrier
 MiniZinc Exact Global Optimum: 915.2000
 
 Metaheuristic Matrix Performance:
-                              Best   Worst         Mean     StdDev  SRate  SSpeed  Outliers
-Binary PSO (Baseline)        920.3   946.9   930.600000   7.894682    0.0     0.0         0
-Walrus Optimizer (Proposed)  933.1  1076.4  1006.153333  34.245406    0.0     0.0         0
+                             Best    Worst     Mean   StdDev    SRate   SSpeed  Outliers
+Binary PSO (Baseline)      920.3000 946.9000 930.6000   7.8947   0.0000   0.0000         0
+Walrus Optimizer (Proposed)933.10001076.40001006.1533  34.2454   0.0000   0.0000         0
 
 Academic Notes:
-The exact mathematical optimum is established at 915.20 via parallelized HiGHS 
+The exact mathematical optimum is established at 915.2000 via parallelized HiGHS 
 MILP branch mapping on the Intel Xeon E-2124. The baseline BPSO achieved high 
-precision proximity, yielding a minimum cost of 920.30 (0.55% optimality gap) 
-with tight population grouping (StdDev = 7.89). The proposed Walrus Optimizer 
-exhibits an expanded exploration tracking spread (StdDev = 34.24), achieving a 
-best value of 933.10 (1.95% optimality gap) while maintaining dynamic population 
-diversity across high-dimensional architectural search layers.
+precision proximity, yielding a minimum cost of 920.3000 (+0.56% optimality gap) 
+with tight population grouping (StdDev = 7.8947). The proposed Walrus Optimizer 
+exhibits an expanded exploration tracking spread (StdDev = 34.2454), achieving a 
+best value of 933.1000 (+1.96% optimality gap) while maintaining dynamic population 
+diversity across high-dimensional architectural search layers. 
+
+No statistical outliers were triggered or required swapping during large instance execution. 
+The Mann-Whitney-Wilcoxon evaluation yields a U-Statistic of 10.50 and a p-value of 
+0.00000, confirming that the distinct metaheuristic execution profiles exhibit 
+statistically significant operational differences.
 ================================================================================
