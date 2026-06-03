@@ -1,0 +1,9 @@
+
+Running tmlpa_integer.mzn, instance_small.dzn
+503msec
+
+Optimal Cost: 84.2
+y = [1, 0, 1]
+----------
+==========
+Finished in 503msec.

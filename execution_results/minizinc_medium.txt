@@ -1,0 +1,5 @@
+$ ./minizinc --solver HiGHS ~/Dropbox/Docs/Magister/JQUIROZ-PROYECTO-IAA-MIA-2026/minizinc/tmlpa_integer.mzn ~/Dropbox/Docs/Magister/JQUIROZ-PROYECTO-IAA-MIA-2026/minizinc/instance_medium.dzn -p 4
+Optimal Cost: 451.9999999999957
+y = [1, 1, 1, 0, 0, 0, 1, 0, 0, 1]
+----------
+==========
