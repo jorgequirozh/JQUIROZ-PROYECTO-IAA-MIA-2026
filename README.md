@@ -23,7 +23,7 @@ To extend the baseline paradigm provided by the curriculum and achieve an Excele
 ## Repository Structure
 
 The layout of the project workspace is structured as follows:
-
+```
 .
 ├── README.md                      # Project documentation and execution instructions
 ├── TMLPA_Optimization.ipynb       # Main Jupyter Notebook containing swarms and analysis
@@ -55,7 +55,7 @@ The layout of the project workspace is structured as follows:
     ├── report.PDF                 # Compiled academic paper
     └── img/                       # Graphical assets embedded directly inside main.tex
         └── fig1.png               # Network architectural topology schematic
-
+```
 ---
 
 ## Problem Definition Overview
