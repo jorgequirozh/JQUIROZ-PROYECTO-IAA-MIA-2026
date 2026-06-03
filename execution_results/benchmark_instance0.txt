@@ -1,0 +1,14 @@
+================================================================================
+RUNNING BENCHMARK SIDE-BY-SIDE ON INSTANCE 0 (VALPARAÍSO CONTEXT)
+================================================================================
+
+>>> Executing Backward-Compatible Hybrid PSO Solver...
+>>> Executing New Binary Walrus Optimizer Solver...
+
+================================ BENCHMARK RESULTS ================================
+Metric                    | Binary PSO Baseline       | Binary Walrus (Mine!)    
+-----------------------------------------------------------------------------------
+Best Cost Achieved        | 84.20                     | 84.20                    
+Hub Configuration (y)     | [1, 0, 1]                 | [1, 0, 1]                
+Client Assignments (x)    | ['H1', 'H1', 'H3', 'H3', 'H3'] | ['H1', 'H1', 'H3', 'H3', 'H3']
+===================================================================================
