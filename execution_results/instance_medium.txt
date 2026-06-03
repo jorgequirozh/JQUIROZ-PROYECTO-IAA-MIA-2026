@@ -1,19 +1,39 @@
 Initializing file-driven optimization matrix from: ./minizinc/instance_medium.dzn
 Loaded Scale: 10 Hubs x 25 Clients configuration.
 
-Commencing 30 independent stochastic sweeps...
-Executions completed. Printing optimal configurations...
+Commencing independent stochastic sweeps with dynamic outlier monitoring (Target N=30)...
+-> Outliers detected! Purging and re-executing to protect sample integrity...
+Data collection completed safely. Sample size stable at 30 valid runs. (Total Outliers Swapped: 2)
 
-==================== OPTIMAL LAYOUTS ====================
-BPSO Best Hub Deployment (y):    [1, 1, 1, 0, 1, 0, 0, 0, 0, 1]
-Walrus Best Hub Deployment (y):  [1, 1, 1, 0, 1, 0, 0, 0, 0, 1]
-=========================================================
+============================== DESCRIPTIVE STATISTICS ==============================
+            Binary PSO Baseline  Binary Walrus (Mine)
+Best Cost                 461.0              464.8000
+Worst Cost                461.0              473.5000
+Mean Cost                 461.0              468.9767
+Median                    461.0              469.8000
+Std. Dev.                   0.0                2.5127
+IQR                         0.0                3.2000
+SRate                       0.0                0.0000
+SSpeed                      0.0                0.0000
+====================================================================================
+
+Instant LaTeX Code for Paper:
+\begin{tabular}{lrr}
+\toprule
+ & Binary PSO Baseline & Binary Walrus (Mine) \\
+\midrule
+Best Cost & 461.0000 & 464.8000 \\
+Worst Cost & 461.0000 & 473.5000 \\
+Mean Cost & 461.0000 & 468.9767 \\
+Median & 461.0000 & 469.8000 \\
+Std. Dev. & 0.0000 & 2.5127 \\
+IQR & 0.0000 & 3.2000 \\
+SRate & 0.0000 & 0.0000 \\
+SSpeed & 0.0000 & 0.0000 \\
+\bottomrule
+\end{tabular}
 
 
-================================================================================
-   STATISTICAL METRICS TABLE
-================================================================================
-                              Best  Worst     Mean        StdDev  SRate  SSpeed  Outliers_Removed
-Binary PSO (Baseline)        461.0  461.0  461.000  5.684342e-14    0.0     0.0                 0
-Walrus Optimizer (Proposed)  464.8  473.5  469.275  2.330179e+00    0.0     0.0                 2
-================================================================================
+============================= STATISTICAL INFERENCE =============================
+Mann-Whitney-Wilcoxon Test: U-Statistic = 0.00 | p-value = 0.00000
+====================================================================================
