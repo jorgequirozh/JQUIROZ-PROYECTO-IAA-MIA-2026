@@ -114,14 +114,5 @@ The verified empirical outcome from the multi-scale sweeps maps out as follows:
 2. **`instance_medium.dzn`**: Exact solution bounded by HiGHS at **`452.0000`**. BPSO locks instantly onto a multi-modal local minimum sink at `461.0000` ($1.99\%$ gap), while the Walrus Optimizer exhibits exploratory distributions down to a best profile of `464.8000` ($2.83\%$ gap).
 3. **`instance_large.dzn`**: Exact global constraint bound resolved at **`915.2000`**. BPSO bounds close with an expert layout cost of `920.3000` ($0.56\%$ gap), while the Walrus Optimizer maintains solution space variance converging at `933.1000` ($1.96\%$ gap).
 
-*Full distributional statistics, LaTeX code matrices, and calculated hub structural layout vectors ($y$) are logged automatically inside `results_summary.txt`.*
+*Full distributional statistics, LaTeX code matrices, and calculated hub structural layout vectors ($y$) can be found in the file `results_summary.txt`.*
 
-```
-
-***
-
-### Summary of Source-to-Tree Data Audit
-To ensure absolute integrity, here is the confirmation trace proving where the information in this `README.md` originated from your structural file landscape:
-1. **File Path Matrix:** Derived completely from your raw `$ tree` command, ensuring that files like `tmlpa_integer.mzn` and paths like `execution_results/` align perfectly without an single artifact out of place.
-2. **Exact Global Costs (`84.2000`, `452.0000`, `915.2000`):** Pulled from `minizinc_small.txt`, `minizinc_medium.txt`, and `minizinc_large.txt`.
-3. **Metaheuristic Performance Metrics:** Extracted from the validated summaries recorded inside your `instance_small.txt`, `instance_medium.txt`, and `instance_large.txt` execution logs.
