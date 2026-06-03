@@ -2,7 +2,12 @@ Initializing file-driven optimization matrix from: ./minizinc/instance_large.dzn
 Loaded Scale: 20 Hubs x 50 Clients configuration.
 
 Commencing 30 independent stochastic sweeps...
-Executions completed successfully. Passing arrays to analytical engines...
+Executions completed. Printing optimal configurations...
+
+==================== OPTIMAL LAYOUTS ====================
+BPSO Best Hub Deployment (y):    [0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0]
+Walrus Best Hub Deployment (y):  [0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0]
+=========================================================
 
 
 ================================================================================
@@ -12,15 +17,3 @@ Executions completed successfully. Passing arrays to analytical engines...
 Binary PSO (Baseline)        920.3   946.9   930.600000   7.894682    0.0     0.0                 0
 Walrus Optimizer (Proposed)  933.1  1076.4  1006.153333  34.245406    0.0     0.0                 0
 ================================================================================
-LaTeX Table Code:
-\begin{tabular}{lrrrrrrr}
-\toprule
- & Best & Worst & Mean & StdDev & SRate & SSpeed & Outliers_Removed \\
-\midrule
-Binary PSO (Baseline) & 920.3000 & 946.9000 & 930.6000 & 7.8947 & 0.0000 & 0.0000 & 0 \\
-Walrus Optimizer (Proposed) & 933.1000 & 1076.4000 & 1006.1533 & 34.2454 & 0.0000 & 0.0000 & 0 \\
-\bottomrule
-\end{tabular}
-
-/tmp/ipykernel_8955/778263776.py:84: MatplotlibDeprecationWarning: The 'labels' parameter of boxplot() has been renamed 'tick_labels' since Matplotlib 3.9; support for the old name will be dropped in 3.11.
-  plt.boxplot([pso_finals, walrus_finals], labels=["Binary PSO", "Walrus Optimizer"])
