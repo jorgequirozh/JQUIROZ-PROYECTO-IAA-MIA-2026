@@ -1,132 +1,127 @@
-# Multi-Scale Metaheuristic and Exact Optimization Framework for the TMLPA Problem
+# Two-Echelon Microhub Location-Allocation Problem (TMLPA) Benchmark Engine
 
-This repository contains the source code, constraint programming formulations, data models, and empirical benchmarking suites developed for the Two-Echelon Microhub Location-Allocation Problem (TMLPA) within an urban logistics context (Valparaíso Pilot). The project evaluates a proposed Binary Walrus Optimizer (BWO) against a classical Binary Particle Swarm Optimization (BPSO) baseline, validated against exact mathematical programming ground truths compiled via MiniZinc.
-
----
-
-## Architectural Overview
-
-The TMLPA is an NP-hard combinatorial optimization challenge tailored for green last-mile urban logistics. It simultaneously governs two tightly coupled discrete decision profiles:
-1. Facility Location Layer (y_j in {0,1}): Selecting which temporary city-center microhubs to open given tight structural infrastructure boundaries ([P_min, P]) and fixed opening costs.
-2. Pedestrian Assignment Layer (x_ij in {0,1}): Mapping discrete demand clients to open facilities without violating hard courier maximum walking thresholds (d_max) or volumetric facility capacities (L_j).
-
-### Key Technical Enhancements (Custom Developments)
-
-To extend the baseline paradigm provided by the curriculum and achieve an Excelente ranking under formal validation guidelines, the following core frameworks were developed from scratch below the professor's baseline sections:
-
-* Intelligent Greedy Routing Repair Module: Canonical swarm adjustments randomly flip assignment vectors, causing severe constraint decay. This component implements a deterministic mapping mechanism that sorts hubs by ascending walking distances and maps demand footprints sequentially against real-time residual capacities, guaranteeing solution feasibility without altering structural population diversity.
-* Continuous-to-Binary Sigmoidal Walrus Migration: Transforms continuous velocity walks derived from the newly formulated Walrus Optimizer into stable discrete exploration schedules using custom sigmoidal probabilities (S(v) = 1 / (1 + exp(-v))).
-* Automated Multi-Scale Benchmark Suite: Replaces hardcoded operational instances with object-oriented scaling loops capable of reading, executing, and monitoring Small, Medium, and Large-scale operational matrices seamlessly.
+This repository contains a fully reproducible academic evaluation suite designed to optimize the location and pedestrian allocation of temporary microhubs for last-mile logistics. The project benches an advanced **Binary Walrus Optimizer (BWO)** against a traditional **Binary Particle Swarm Optimization (BPSO)** baseline. Both metaheuristic solvers are evaluated against certified exact mathematical global bounds solved via the **HiGHS MILP Solver Engine** in MiniZinc.
 
 ---
 
-## Repository Structure
+## Repository Directory Structure
 
-The layout of the project workspace is structured as follows:
-```
+```text
 .
-├── README.md                      # Project documentation and execution instructions
-├── TMLPA_Optimization.ipynb       # Main Jupyter Notebook containing swarms and analysis
-├── results_summary.txt            # Raw text data registry capturing runtime metrics
-├── execution_results/             # Compiled empirical artifacts and analytics
-│   ├── benchmark_instance0.txt    # Convergence tracking for the pilot execution trace
-│   ├── instance_small.txt         # Statistical metric array for the small-scale run
-│   ├── instance_medium.txt        # Statistical metric array for the medium-scale run
-│   ├── instance_large.txt         # Statistical metric array for the large-scale run
-│   ├── minizinc_small.txt         # Exact solver baseline verification output (Small)
-│   ├── minizinc_medium.txt        # Exact solver baseline verification output (Medium)
-│   ├── minizinc_large.txt         # Exact solver baseline verification output (Large)
-│   ├── convergence_analysis_instance0.png            # Convergence rate over generations plot
-│   ├── optimized_infrastructure_topology_instance0.png # Spatial network mapping layout
-│   ├── statistical_operational_cost_instance_small.png  # Dispersion boxplot (Small scale)
-│   ├── statistical_operational_cost_instance_medium.png # Dispersion boxplot (Medium scale)
-│   └── statistical_operational_cost_instance_large.png  # Dispersion boxplot (Large scale)
-├── minizinc/                      # Constraint Programming environment
-│   ├── tmlpa_model.mzn            # Core MiniZinc optimization model (Continuous Float)
-│   ├── tmlpa_integer.mzn          # Scaled Integer Optimization Model (High-Performance Branching)
-│   ├── instance_small.dzn         # Small-scale test instance dataset (3 Hubs / 5 Clients)
-│   ├── instance_medium.dzn         # Medium-scale challenge instance (10 Hubs / 25 Clients)
-│   └── instance_large.dzn         # Large-scale stress-test instance (20 Hubs / 50 Clients)
-└── report/                        # Academic manuscript files (Elsevier Format)
-    ├── main.tex                   # LaTeX main source document (Spanish)
-    ├── refs.bib                   # BibTeX bibliography references (Updated with Walrus 2023)
-    ├── elsarticle.cls             # Elsevier document class style
-    ├── elsarticle-num.bst         # Numerical reference style
-    ├── report.PDF                 # Compiled academic paper
-    └── img/                       # Graphical assets embedded directly inside main.tex
-        └── fig1.png               # Network architectural topology schematic
+├── README.md                                 # Operational manual and replication guide
+├── TMLPA_Optimization.ipynb                  # Primary Jupyter Notebook containing solvers & engine
+├── results_summary.txt                       # Central consolidated data registry (Descriptive & Inferences)
+├── execution_results/                        # Raw runtime logs and publication-quality figures
+│   ├── instance_small.txt                    # Metaheuristic run summaries (3x5 scale)
+│   ├── instance_medium.txt                   # Metaheuristic run summaries (10x25 scale)
+│   ├── instance_large.txt                    # Metaheuristic run summaries (20x50 scale)
+│   ├── minizinc_small.txt                    # HiGHS solver verification log (Global Opt: 84.20)
+│   ├── minizinc_medium.txt                   # HiGHS solver verification log (Global Opt: 452.00)
+│   ├── minizinc_large.txt                    # HiGHS solver verification log (Global Opt: 915.20)
+│   ├── convergence_analysis_instance_*.png   # Execution trajectory plots for LaTex format
+│   └── cost_metric_dispersion_instance_*.png # Non-parametric distribution boxplots
+├── minizinc/                                 # Mathematical modeling artifacts
+│   ├── tmlpa_model.mzn                       # Definitive constraint formulation model
+│   ├── tmlpa_integer.mzn                     # Bounds-enforced integer processing script
+│   ├── instance_small.dzn                    # Scale parameter data: 3 Hubs x 5 Clients
+│   ├── instance_medium.dzn                   # Scale parameter data: 10 Hubs x 25 Clients
+│   └── instance_large.dzn                    # Scale parameter data: 20 Hubs x 50 Clients
+└── report/                                   # Academic publishing manuscripts
+    ├── main.tex                              # Primary LaTeX source code document
+    ├── refs.bib                              # Structural BibTeX bibliographic entries
+    ├── elsarticle.cls                        # Elsevier Journal template formatting layout
+    ├── elsarticle-num.bst                    # Numerical citation bibliography style
+    ├── report.PDF                            # Compiled evaluation document artifact
+    └── img/
+        └── fig1.png                          # Conceptual methodology diagram
+
 ```
----
-
-## Problem Definition Overview
-
-The TMLPA model addresses a multi-capacity, distance-constrained network optimization challenge designed to minimize total infrastructure operational expenditure. The objective function balances two primary cost mechanisms:
-
-1. Fixed Installation Costs: Capital expenditures incurred by activating specific structural microhubs.
-2. Variable Processing Costs: Volumetric transport and operation penalties calculated from customer demand metrics weighted by real Euclidean walking distances.
-
-Operational feasibility is explicitly governed by strict distance ceilings (d_max), individual hub volumetric handling boundaries (L), and structural constraints limiting the total number of simultaneous open hubs (P_min and P).
 
 ---
 
-## Algorithmic Strategy
+## Dependencies & Environment Setup
 
-The metaheuristic optimization engine employs a decoupled architecture to maintain structural backward compatibility while handling scalability constraints:
+The benchmark environment requires Python 3.8+ combined with a native MiniZinc installation configured with the HiGHS solver backend.
 
-* Base Classes (Immutable): Contains the original TMLPAProblem data framework and the baseline Particle and PSOSolver blueprints provided in the curriculum core.
-* Intelligent Greedy Routing Module: A deterministic repair layer that replaces blind stochastic routing choices. It automatically assigns demand nodes to the nearest open hub while monitoring remaining capacity boundaries. If no feasible layout exists for a given binary hub configuration, it is heavily penalized.
-* Proposed Walrus Optimizer: A custom implementation adapted for discrete search spaces, integrating herd-gathering and migration behaviors to navigate non-linear decision spaces.
-* Polymorphic Extensions (GreedyParticle / GreedyPSOSolver): Object-oriented subclasses that inject the greedy repair protocol into the continuous-to-binary velocity equations without altering the underlying mathematical equations of the baseline algorithm.
+### 1. Python Dependencies
 
----
+Install the standard numerical science, data engineering, and visualization libraries:
 
-## Execution and Benchmarking Guide
+```bash
+pip install numpy pandas scipy matplotlib jupyter
 
-### Prerequisites
+```
 
-The environment must contain a standard Python 3.8+ deployment along with the following numerical and data-science packages:
-* numpy
-* pandas
-* matplotlib
+### 2. MiniZinc CLI Core Engine
 
-To run exact mathematical validations, a working installation of the MiniZinc IDE or CLI bundled with an active Mixed-Integer Programming or Constraint Programming solver (such as COPT, Gurobi, or HiGHS) is required.
+Ensure the `minizinc` executable is exposed to your system path.
 
-### Executing Metaheuristic Sweeps
+* **Ubuntu/Debian:** `sudo apt-get install minizinc`
+* **macOS (Homebrew):** `brew install minizinc`
+* **Windows:** Install via official installer and add binary to system environment path variables.
 
-1. Open TMLPA_Optimization.ipynb in a Jupyter notebook environment.
-2. Execute all cell blocks sequentially to register the underlying classes, configurations, and analytical metrics.
-3. The notebook isolates scale execution into dedicated standalone blocks at the bottom of the workspace:
-   * Valparaíso Pilot Unit Test: Evaluates a single trace to plot the direct convergence profile against a geographic network topology map.
-   * Batch Runner Cells: Triggers 30 independent stochastic loops with unique random seed isolation for "instance_small.dzn", "instance_medium.dzn", and "instance_large.dzn".
+Verify the command-line bindings via your shell:
+
+```bash
+minizinc --version
+
+```
 
 ---
 
-## Empirical Baseline Validation Results
+## Execution & Replication Guide
 
-The performance profiles of the baseline BPSO and the proposed Walrus Optimizer across 30 independent stochastic sweeps (seeds 43-72) are validated against exact mathematical programming ground truths compiled via the parallelized HiGHS solver engine:
+### Running the Metaheuristic Experiment
 
-| Experiment / Metaheuristic | Exact Optimum | Best Cost | Worst Cost | Mean Cost | Std. Deviation | Success Rate (SRate) | Outliers |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Instance Small** (3H x 5C) | **84.20** | | | | | | |
-| Binary PSO Baseline | | 84.20 | 84.20 | 84.20 | 2.842e-14 | 1.0000 | 0 |
-| Walrus Optimizer (Proposed) | | 84.20 | 84.20 | 84.20 | 2.842e-14 | 1.0000 | 0 |
-| **Instance Medium** (10H x 25C) | **452.00** | | | | | | |
-| Binary PSO Baseline | | 461.00 | 461.00 | 461.00 | 5.684e-14 | 0.0000 | 0 |
-| Walrus Optimizer (Proposed) | | 464.80 | 473.50 | 469.28 | 2.330e+00 | 0.0000 | 2 |
-| **Instance Large** (20H x 50C) | **915.20** | | | | | | |
-| Binary PSO Baseline | | 920.30 | 946.90 | 930.60 | 7.894e+00 | 0.0000 | 0 |
-| Walrus Optimizer (Proposed) | | 933.10 | 1076.40 | 1006.15 | 3.425e+01 | 0.0000 | 0 |
+Open the main Jupyter notebook environment and execute all cells sequentially:
 
-### Core Performance Metrics Definitions
-* Success Rate (SRate): Percentage of runs that converge within an absolute error threshold of 0.01 relative to the true MiniZinc global minimum.
-* Standard Deviation Tracking: Evaluates structural population diversity. The absolute zero variance exhibited by BPSO in the medium scale exposes systemic premature convergence, where particles freeze into local topological traps. Conversely, the Walrus Optimizer's broader deviations reveal active exploration of alternative allocation configurations across non-linear decision layers.
+```bash
+jupyter notebook TMLPA_Optimization.ipynb
+
+```
+
+The primary loop inside `execute_benchmark_experiment("instance_name.dzn")` will automatically:
+
+1. Stream problem specifications directly from the `.dzn` allocation file.
+2. Launch independent stochastic sweeps using isolated, offset random seed profiles.
+3. Compute an Interquartile Range (IQR) pass at iteration boundaries to isolate, drop, and transparently swap statistical outliers to preserve sample size integrity ($N=30$).
+4. Compute non-parametric Mann-Whitney-Wilcoxon statistical inferences.
+5. Save publication-proportioned EPS/PNG plot matrices directly into `execution_results/`.
+
+### Verifying Exact Mathematical Ground Truths
+
+To independently compile the exact global baseline bounds using the branch-and-cut optimization routines of the HiGHS engine, run the following commands via your CLI terminal:
+
+```bash
+# Small Instance
+minizinc --solver HiGHS minizinc/tmlpa_integer.mzn minizinc/instance_small.dzn -p 4
+
+# Medium Instance
+minizinc --solver HiGHS minizinc/tmlpa_integer.mzn minizinc/instance_medium.dzn -p 4
+
+# Large Instance
+minizinc --solver HiGHS minizinc/tmlpa_integer.mzn minizinc/instance_large.dzn -p 4
+
+```
 
 ---
 
-## Hardware Architecture & Solver Optimization
+## Core Performance Summary
 
-To compile exact mathematical ground truths without running into computational bottlenecks on complex matrices, this workspace decouples evaluation profiles by utilizing two distinct testbeds:
+The verified empirical outcome from the multi-scale sweeps maps out as follows:
 
-* Metaheuristic Testbed: Executed on standard mobile processors (Lenovo D330 / Intel Celeron architecture), demonstrating that localized bio-inspired swarms can discover high-quality feasible layouts with narrow optimality gaps (0.55% for BPSO and 1.95% for Walrus on the large instance) in under 10 seconds.
-* Exact Solver Testbed: Executed on a production-grade hypervisor environment (Dell PowerEdge T140 / Intel Xeon E-2124 @ 3.31GHz running a Red Hat Enterprise Linux 10 VM). 
-* Mathematical Optimization: Standard continuous relaxation bounds processing floating-point models (tmlpa_model.mzn) introduce significant domain propagation delay inside Constraint Programming engines (such as Gecode 6.3.0). Transforming the system equations into scaled discrete integers (tmlpa_integer.mzn) and running an AVX2-vectorized Mixed-Integer Linear Programming branch-and-cut solver (HiGHS 1.14.0) parallelized across all 4 processing cores captures the exact global minimum of high-dimensional allocation fields almost instantly.
+1. **`instance_small.dzn`**: Both metaheuristics successfully evaluate down to the absolute mathematical global optimum profile (**`84.2000`**) with $100\%$ tracking success (`SRate = 1.0000`).
+2. **`instance_medium.dzn`**: Exact solution bounded by HiGHS at **`452.0000`**. BPSO locks instantly onto a multi-modal local minimum sink at `461.0000` ($1.99\%$ gap), while the Walrus Optimizer exhibits exploratory distributions down to a best profile of `464.8000` ($2.83\%$ gap).
+3. **`instance_large.dzn`**: Exact global constraint bound resolved at **`915.2000`**. BPSO bounds close with an expert layout cost of `920.3000` ($0.56\%$ gap), while the Walrus Optimizer maintains solution space variance converging at `933.1000` ($1.96\%$ gap).
+
+*Full distributional statistics, LaTeX code matrices, and calculated hub structural layout vectors ($y$) are logged automatically inside `results_summary.txt`.*
+
+```
+
+***
+
+### Summary of Source-to-Tree Data Audit
+To ensure absolute integrity, here is the confirmation trace proving where the information in this `README.md` originated from your structural file landscape:
+1. **File Path Matrix:** Derived completely from your raw `$ tree` command, ensuring that files like `tmlpa_integer.mzn` and paths like `execution_results/` align perfectly without an single artifact out of place.
+2. **Exact Global Costs (`84.2000`, `452.0000`, `915.2000`):** Pulled from `minizinc_small.txt`, `minizinc_medium.txt`, and `minizinc_large.txt`.
+3. **Metaheuristic Performance Metrics:** Extracted from the validated summaries recorded inside your `instance_small.txt`, `instance_medium.txt`, and `instance_large.txt` execution logs.
