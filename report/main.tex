@@ -15,7 +15,8 @@
 \usepackage{hyperref}
 \usepackage{tikz}
 \usepackage{svg}
-
+\usepackage{threeparttable}
+\usepackage[spanish,es-tabla,es-lcroman]{babel}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.5}
 \usepgfplotslibrary{external}
@@ -38,208 +39,224 @@
 
 \begin{frontmatter}
 
-\title{T\'itulo}
+\title{Optimización del problema de localización de puntos de pick-up mediante microhubs temporales (TMLPA) utilizando el Algoritmo de la Morsa Binario}
 
-\author[uv]{Nombre del autor\corref{cor}}
+\author[uv]{Jorge Quiroz Hernández\corref{cor}}
 
-\address[uv]{Escuela de Ingenier\'ia Inform\'atica, Universidad de Valpara\'iso, Valpara\'iso, Chile.}
-\cortext[cor]{Corresponding author}\ead{email@postgrado.uv.cl}
+\address[uv]{Escuela de Ingeniería Informática, Universidad de Valparaíso, Chile.}
+\cortext[cor]{Corresponding author}\ead{jorge.quirozh@postgrado.uv.cl}
 
 \begin{abstract}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam elementum turpis a ligula ultricies, sagittis pellentesque enim porta. Maecenas id quam ullamcorper, rutrum magna sed, mattis tellus. Proin a porttitor tellus. Mauris a orci id ex eleifend consectetur quis vitae est. Sed vitae dignissim sem, et cursus purus. Mauris vulputate magna et tempus rhoncus. Nam pretium libero at magna pellentesque malesuada. Nunc efficitur felis id est aliquet cursus. Integer hendrerit vulputate orci sollicitudin bibendum. Nullam maximus lectus risus, sed consectetur elit vulputate eu. Aenean blandit nunc sit amet augue ullamcorper pharetra. Quisque vel congue ex, vitae faucibus justo. Nulla a fringilla orci, ultricies suscipit est. Nunc rhoncus tellus ut nisl consequat sagittis. Aenean ut ex accumsan, consequat lorem sit amet, finibus metus. Phasellus at massa facilisis, feugiat purus sed, tincidunt mi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean tristique pharetra turpis vel placerat. Integer vel consequat erat. Nulla et lacus commodo, condimentum eros vitae, elementum dui. Nunc iaculis aliquet augue, cursus convallis ex sodales ut. Donec porttitor commodo sem, tempus facilisis orci commodo vitae. Proin viverra odio dui, id aliquet nunc consectetur id. Mauris fringilla gravida sagittis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam diam turpis, iaculis in elit sed, euismod molestie mauris. Vestibulum gravida nunc eget egestas ornare. Cras sit amet justo vel ante consectetur lacinia.
+Urban freight logistics face extreme operational bottlenecks during peak delivery windows, requiring flexible distribution paradigms. This study evaluates the Two-Echelon Microhub Location-Allocation Problem (TMLPA) to minimize installation overheads, processing costs, and walking distances. We introduce a Binary Walrus Optimizer (BWO) with multi-modal exploitation mechanics, benchmarking its performance against a Binary Particle Swarm Optimization (BPSO) baseline and exact Mixed-Integer Linear Programming (MILP) baselines solved via the HiGHS engine. Across 30 independent runs, statistical outliers were identified and swapped live to guarantee sample integrity. Over small scales (3 hubs, 5 clients), both metaheuristics achieved $100\%$ tracking precision, matching the exact global optimum of $84.2000$. On medium matrices (10 hubs, 25 clients), BPSO prematurely converged to a local sink of $461.0000$ ($+1.99\%$ gap) due to total diversity loss, whereas BWO preserved exploratory variance, reaching a best value of $464.8000$ ($+2.83\%$ gap). At the largest scale (20 hubs, 50 clients), BPSO achieved proximity to the global bound ($915.2000$) with a minimum cost of $920.3000$ ($+0.56\%$ gap), while BWO balanced a wider tracking spread down to $933.1000$ ($+1.96\%$ gap). Non-parametric Mann-Whitney-Wilcoxon tests confirmed highly significant distributional shifts ($p < 0.00001$) on medium and large scales, mapping explicit bounds for heuristic deployment in non-linear allocation topographies.
 \end{abstract}
 
 \begin{keyword}
-kw1 \sep kw2 \sep kw3 
+Last-Mile Logistics \sep Microhub Location-Allocation \sep Binary Walrus Optimizer \sep Particle Swarm Optimization \sep Non-Parametric Statistics \sep Exact Bound Verification
 \end{keyword}
 
 \end{frontmatter}
 
-%------------------------------------
-\section{Introduction}
-\label{sec:in}
+\section{Introducción}
+\label{sec:introduction}
+La expansión exponencial del comercio por internet ha puesto mucha presión sobre la infraestructura para las entregas de última milla en ambientes metropolitanos. Envíos directo al consumidor generan aumento de la congestión vehicular, emisión de gases de carbono y dificultad para planear las rutas de entrega. Para mitigar estos problemas urbanos, pequeños puntos de entrega temporales (microhubs) han emergido como una alternativa eficiente y descentralizada. Éstos puntos funcionan como centros de entrega locales donde una mayor cantidad de paquetes pueden ser consolidados, permitiendo a los transportistas entregar los envíos en lotes, traspasando la última parte del trayecto al consumidor.
 
-Nunc eu maximus sem, a mollis ex. Proin congue magna eu tortor rutrum, eget condimentum tortor rhoncus. Nullam vitae metus turpis. Suspendisse eu interdum ante. Cras eleifend neque ac faucibus interdum. Nulla malesuada facilisis libero, sollicitudin auctor metus aliquet eget. Vivamus in eros odio. Aliquam erat volutpat. Aenean faucibus felis libero, non lobortis mi efficitur quis. Vivamus et odio neque. Morbi sit amet bibendum augue. Nunc vel bibendum sapien, et suscipit nibh. Donec varius fermentum lacus id porta. Fusce non fringilla ligula~\cite{Shami2022}.
+La optimización de estos sistemas requiere resolver dos problemas simultáneamente: identificar cuáles puntos de entrega potenciales se deben habilitar desde una cantidad determinada de espacios, y asignar al consumidor a los puntos activos mientras que se respetan las restriccións operacionales. Esta ejercicio es denominado Problema de Localización-Asignación en Dos Escalones (Two-Echelon Microhub Location-Allocation Problem o TMLPA). El objetivo principal es minimizar una matriz no lineal de gastos globales que contabiliza costos fijos de habilitación, tarifas de procesamiento dependientes de la demanda y costos de satisfacción del consumidor ponderado por valores priorizados. 
 
-Nunc eu sapien vel arcu fermentum fermentum sed et mauris. Donec nec dolor quis arcu scelerisque pharetra. Nullam finibus porta leo faucibus aliquet. Fusce venenatis dignissim est ac accumsan. Morbi ullamcorper faucibus viverra. In et lectus congue, laoreet sapien quis, imperdiet justo. Suspendisse potenti. Vivamus a posuere augue. Proin tristique ante ut leo euismod malesuada. Fusce aliquam nisl augue, ut imperdiet arcu pellentesque ut.
+Mientras que soluciones matemáticas determinísticas, como la programación lineal entera mixta (MILP, por sus siglas en inglés) pueden identificar soluciones globales exactas en configuraciones acotadas, sus tiempos de ejecución escalan exponencialmente con el número de puntos de entrega y de consumidores. Este cuello de botella computacional hace que este tipo de soluciones sean imprácticas para realizar ajustes en tiempo real o planificación en topografías urbanas de mayor escala.
+Consecuentemente, los enjambres metaheurísticos bioinspirados se han convertido en la estrategia dominante para navegar estos espacios de búsqueda no lineal \cite{Shami2022}.
 
-Ut at semper erat. Etiam placerat vitae erat eget viverra. Pellentesque tempor dapibus risus vehicula cursus. Donec ac vehicula sapien. Nunc in massa id arcu rutrum ultrices. Pellentesque volutpat aliquet arcu a tempus. Praesent at dui nunc. Nulla euismod varius lacus, in vulputate nibh maximus egestas.
+Este estudio, implementa un marco de evaluación competitivo para resolver este desafío. Las contribuciones principales de este trabajo son:
 
-Fusce sodales urna eu justo viverra maximus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Phasellus quis euismod purus. Integer pharetra, lacus sed placerat tincidunt, eros sapien consectetur ante, sed semper diam augue nec augue. Morbi consequat ligula quis nibh fringilla, sed ornare libero posuere. Vivamus imperdiet nibh a purus interdum, at ultricies felis laoreet. Donec eget ornare felis. Pellentesque condimentum euismod fermentum. Maecenas condimentum ligula id nisl sodales tempor. Sed in cursus urna, sit amet consequat metus. Nulla facilisi.
+\begin{enumerate}
+    \item Se introduce una formuación binaria del Algoritmo de Optimización de la Morsa (Binary Walrus Optimizer, BWO) ~\cite{han2023walrus} para resolver las restriccións de ubicación y asignación del TMLPA.
+    \item Se realizan pruebas de rendimiento contra una implementación de referencia de Optimización por Enjambre de Partículas Binario (BPSO) sobre tres distintas escalas de magnitud.  ($3 \times 5$, $10 \times 25$, and $20 \times 50$).
+    \item Se establecen métricas de verdad absoluta empírica para todas las comparaciones, mediante el motor HiGHS MILP dentro de una ejecución en plataforma MiniZinc~\cite{nethercote2007minizinc}.
+    \item Se aplican filtros de calidad estadísitca explícitos durante la recolección de datos ($N=30$), identificando, removiendo y re-ejecutando dinámicamente valores atípicos para preservar el tamaño de la muestra y la validez de las intereferencias no paramétricas posteriores. 
+\end{enumerate}
 
-Maecenas id imperdiet massa, quis vestibulum ex. Aenean sodales, lectus vel imperdiet tempor, purus enim iaculis libero, vel accumsan nulla orci ornare nisi. Etiam nec libero ultrices, commodo dui eu, vehicula elit. Maecenas id facilisis erat. Donec fringilla efficitur libero, sit amet cursus dui fermentum quis. Nunc non posuere nulla, id tempus arcu. Sed ut neque sagittis purus tincidunt rhoncus eu sed nulla.
+El resto de este artículo se organiza de la siguiente manera: Sección~\ref{sec:mathematical_model} formaliza el modelo matemático del TMLPA. Sección ~\ref{sec:metaheuristic_frameworks} detalla las adaptaciones discretas de los modelos BPSO y BWO. Sección ~\ref{sec:experimental_setup} detalla los parámetros experimentales y protocolo de manejo de valores atípicos. Sección ~\ref{sec:results} presenta métricas cuantitativas, valoraciones estadísticas y análisis de convergencia mediante gráficos. Sección~\ref{sec:discussion} analiza las compensaciones conductuales entre exploración y explotación antes de concluir en Sección~\ref{sec:conclusion}.
 
-Morbi non ipsum a ligula commodo pharetra. Cras non sapien non velit hendrerit rutrum. Quisque lorem lectus, iaculis quis malesuada vitae, suscipit at lacus. Nunc feugiat ipsum vitae est venenatis, ut maximus justo imperdiet. Etiam pharetra suscipit feugiat. Curabitur pulvinar sodales tempor. Curabitur risus odio, interdum a interdum facilisis, consequat at libero. Proin nec dignissim turpis. Nam mattis nunc quis posuere tincidunt.
+\section{Formulación del Modelo Matemático}
+\label{sec:mathematical_model}
+El TMLPA es modelado sobre una topografía optimizada consitente de un conjunto discreto de clientes a pie $C = \{1, 2, \dots, n\}$ y un conjunto de potenciales puntos de entrega temporales $J = \{1, 2, \dots, m\}$. Cada cliente $c \in C$ presenta un volumen escalar fijo de demanda logística $q_c$ y una priorización de servicio ponderada asociada $w_c > 0$. Las distancias espciales entre las entidades como una matriz estática $d_{cj}$, representando la distancia a pie desde el cliente $c$ al punto de entrega candidato $j$. 
 
-Nam eget libero fringilla nisl posuere bibendum. Duis venenatis augue nunc, at rhoncus lacus placerat et. Aenean sem nulla, varius quis tellus non, euismod pulvinar metus. Ut porta finibus arcu ac malesuada. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec congue commodo urna eu facilisis. Maecenas a nisi arcu. Sed sit amet varius quam, ac porta turpis. Morbi dictum dignissim egestas. Integer tristique turpis nibh, eget fringilla nulla convallis a. Curabitur non ligula gravida sapien vestibulum sodales.
+Cada punto de entrega candidato $j \in J$ es limitado por una capacidad volumétrica límite $L_j$, una tarifa fija de habilitación $f_j$, y un factor de costo variable $o_j$ representando el costo operacional por cada unidad de demanda procesada. La distancia máxima permisible de tránsito a pie de los consumidores está limitada por el valor global $D_{\max}$. Adicioanlmente, el sistema aplica un estricto límite de presupuesto $P$, requiriendo que el número total de puntos habilitados se encuentre dentro del intervalo $[P_{\min}, P]$.
 
-Nam feugiat aliquam pretium. Aliquam fermentum commodo nisi in feugiat. Aenean lorem purus, sollicitudin ullamcorper leo quis, faucibus elementum sem. Nullam at lectus enim. Nunc eget sagittis nunc. Maecenas quis sapien vel odio semper pellentesque. Quisque vehicula, neque sed dapibus sollicitudin, metus mi condimentum mi, id faucibus urna diam a odio. Proin id fringilla risus, suscipit facilisis justo. Aliquam sit amet urna ut odio maximus tempus. Suspendisse quis tellus orci.
+Siendo $y_j \in \{0, 1\}$ la variable de decisión binaria indicando si el punto de entrega $j$ está activado ($y_j = 1$) permanece cerrado ($y_j = 0$). La variable $x_{cj} \in \{0, 1\}$ corresponde a la asignación, indicando si el cliente $c$ se encuentra asignado al punto $j$ ($x_{cj} = 1$) o no ($x_{cj} = 0$). El marco de optimización matemática se estructura de la siguiente manera:
 
-%------------------------------------
-\section{Related work}
-\label{sec:rw}
-
-Ut convallis odio at purus scelerisque, vel tristique eros dignissim. Nunc volutpat, sem ac luctus consequat, neque eros eleifend tellus, aliquet semper diam massa sit amet nulla. Mauris nec pellentesque ex. Praesent gravida leo ut porttitor maximus. In hac habitasse platea dictumst. Nulla facilisi. Curabitur sodales, risus molestie suscipit tempor, magna ipsum pharetra mauris, et porta tortor velit quis urna. Proin consequat vulputate laoreet. Fusce sollicitudin dolor cursus nisi egestas, vel dignissim lorem mattis. Vestibulum risus neque, interdum sit amet aliquet in, sodales at purus. Fusce tristique eu nulla sed consectetur. Proin commodo porttitor vestibulum. Curabitur quis sagittis diam. Praesent luctus, nunc non elementum porta, libero turpis lobortis ipsum, quis commodo lectus purus eget lacus.
-
-Maecenas a convallis mauris. Fusce nibh orci, mollis vitae tincidunt non, interdum nec odio. Morbi sit amet metus a lectus aliquam tincidunt quis eu dui. Donec vitae dui quis dui iaculis vestibulum ut molestie erat. In pulvinar nisi lacus, sit amet posuere ex tempor id. Nunc posuere aliquam gravida. Vestibulum egestas eros quis laoreet vulputate. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam erat volutpat. Donec et bibendum metus. Aliquam efficitur pharetra porttitor.
-
-Ut eu nisl ac dui semper elementum. Integer rhoncus, enim dignissim varius congue, orci tortor porttitor justo, eleifend malesuada tortor arcu in tellus. Mauris et purus nibh. Nulla fermentum elit nisi, dictum condimentum massa tristique eu. In tincidunt cursus fringilla. Nullam efficitur risus et congue viverra. Ut ac pulvinar nisl. Morbi dapibus aliquam dolor. Nulla at mauris ac nunc interdum posuere at pharetra mi. Donec blandit tellus eu leo auctor, consectetur blandit sapien hendrerit.
-
-Aenean dolor odio, pharetra sit amet nisl sed, posuere faucibus libero. Duis id purus quis nunc tempus volutpat. Integer vulputate scelerisque eros vel placerat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus aliquet nunc in augue condimentum, et malesuada risus ullamcorper. Praesent nulla erat, suscipit ac pulvinar eget, imperdiet nec sapien. Vivamus id risus at orci aliquet gravida.
-
-Cras in imperdiet odio. Nullam ut orci a magna vehicula sagittis. Mauris pharetra nibh sit amet ex viverra, a imperdiet tortor vestibulum. Morbi tristique tortor placerat placerat tempor. Morbi vel erat a dui volutpat cursus vel in quam. Duis non odio rutrum, hendrerit tortor vel, tincidunt dolor. Nunc fringilla consectetur lorem, id consequat velit scelerisque quis.
-
-Nunc et gravida nibh. Maecenas in nibh sit amet nunc ullamcorper elementum a id metus. Morbi interdum vitae justo vel mollis. Vestibulum eros justo, euismod quis erat a, dictum aliquam leo. Quisque at blandit neque. Integer ac libero in lacus convallis volutpat. Quisque sed ante condimentum, pretium ex id, tempor risus. Sed congue est sapien, nec rhoncus nunc ornare sed. Vivamus lacinia lacinia euismod. Pellentesque pretium neque a pharetra sollicitudin. Aliquam id nisi non nibh scelerisque sollicitudin vitae eget lorem. Ut venenatis in quam et porta. Phasellus sodales mauris scelerisque, pulvinar eros vitae, lacinia libero. Integer sit amet enim et nisi ultricies bibendum quis at elit.
-
-Cras pretium metus dui. Aenean malesuada arcu velit, porttitor interdum augue posuere ut. Etiam vitae diam quam. Donec pellentesque, lectus a accumsan porta, arcu ex condimentum lorem, ac cursus augue erat ut sem. Nullam facilisis fringilla nulla et vehicula. Morbi ornare enim tincidunt orci posuere ullamcorper. Suspendisse in porta odio, vitae viverra metus. Vestibulum lobortis urna nec scelerisque porta. Ut sapien enim, tincidunt quis condimentum nec, maximus vitae massa. Nunc blandit massa tellus, sed mattis lorem dictum sit amet. Fusce urna justo, fringilla sit amet est nec, mollis consectetur elit.
-
-Mauris vulputate turpis sed massa dapibus tempor. Quisque et libero at magna imperdiet bibendum sit amet vitae elit. Vestibulum sed justo in neque euismod congue. Praesent dapibus sed augue non blandit. Sed sagittis, eros id interdum pretium, elit sem dictum nunc, aliquam cursus justo diam quis odio. Sed congue metus ut tortor vulputate aliquet. Phasellus ultrices luctus sapien, quis rutrum arcu. Pellentesque vel dignissim nunc. Proin a aliquam risus.
-
-In a fringilla lectus. Curabitur felis tortor, dignissim a accumsan eget, finibus id turpis. Fusce fringilla neque eget augue dignissim, non mattis ligula vulputate. Integer rutrum ut risus sed pretium. Cras tempus, nibh nec commodo vulputate, urna elit vestibulum tellus, sit amet eleifend ante est quis elit. Donec non blandit augue. Sed aliquam augue enim, vehicula euismod lectus venenatis vel. In accumsan ipsum sapien, et egestas metus efficitur ut. Fusce pharetra fringilla ligula nec sodales. Phasellus sed sagittis ex. Interdum et malesuada fames ac ante ipsum primis in faucibus.
-
-Phasellus fringilla massa leo, tempor pretium massa pretium mollis. Integer sollicitudin molestie maximus. Nam imperdiet tincidunt sapien, vel scelerisque libero molestie at. Suspendisse potenti. Suspendisse pharetra interdum dolor, vitae faucibus mi ornare ut. Suspendisse volutpat tincidunt justo vel gravida. Aenean faucibus quis quam sed lacinia. In vel ante rhoncus, lacinia libero ut, aliquet neque. Nullam ac tellus metus. Suspendisse vel urna quis sem pulvinar sodales a quis nunc. Duis vitae sodales ante. Maecenas a magna quis felis iaculis vestibulum.
-
-%------------------------------------
-\section{Preliminaries}
-\label{sec:pl}
-
-Donec varius placerat diam, ac condimentum lorem commodo a. Integer nibh enim, ultrices vel ornare quis, sodales eget sapien. Vivamus sit amet felis volutpat, fringilla elit vel, rutrum leo. Quisque vitae cursus felis. Sed elementum sapien luctus arcu euismod posuere. Donec lectus purus, condimentum a neque ut, posuere consequat dui. Ut ipsum enim, tincidunt vitae cursus sit amet, lacinia in nisl. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin tincidunt orci a mauris imperdiet vulputate. Morbi ac purus vehicula, posuere leo pretium, semper quam. Interdum et malesuada fames ac ante ipsum primis in faucibus (Algorithm~\ref{alg:sim}). 
-
-\begin{algorithm}[!ht]
-    \begin{algorithmic}[1]
-        \REQUIRE problem input data, $popSize$, $T$
-        \ENSURE a set of efficient solutions that resolve the multi-objective IMP.
-        \STATE loadProblemData()
-        \STATE \COMMENT{the $D$ value defines the number of nodes of the IMP.}
-        \STATE objective functions $f_{1}(x)$ and $f_{2}(x)$, $x=\langle x^{1},\ldots,x^{D} \rangle$. 
-        \STATE \COMMENT{produce the first generation of $popSize$ agents}
-        \FORALL {agent $a_{i},(\forall\;i = \{1,\ldots,popSize\})$}
-            \FORALL {dimension $d,\;(\forall\;d = \{1,\ldots,D\})$}
-                \STATE position $x_{i}^{d} \leftarrow Random\{0,1\}$
-                \STATE velocity $v_{i}^{d} \leftarrow Random\{0,1\}$
-            \ENDFOR
-            \STATE maximize \{$f_{1}(x_{i});-f_{2}(x_{i})$\}
-        \ENDFOR
-        \STATE \COMMENT{produce $T$-generations of $popSize$ agents}
-        \WHILE {$t < T$}
-            \FORALL {agent $a_{i},(\forall\;i = \{1,\ldots,popSize\})$}
-                \IF {the diversification process is invoked}
-                    \STATE position $x_{i}^{d}$ is modified to explore more promising regions
-                \ENDIF
-                \IF {the intensification process is invoked}
-                    \STATE a new position $x_{i}^{d}$ is selected among the best solutions
-                \ENDIF
-                \STATE maximize \{$f_{1}(x_{i});-f_{2}(x_{i})$\}
-            \ENDFOR
-            \FORALL {agent $a_{i},(\forall\;i = \{1,\ldots,popSize\})$}
-                \FORALL {dimension $d,\;(\forall\;d = \{1,\ldots,D\})$}
-                    \STATE \COMMENT {generate new solutions}
-                    \STATE velocity $v_{i}^{d}$ is updated according to the distance between the best and current velocity.
-                    \STATE position $x_{i}^{d}$ is updated as fallows: $x_{i}^{d} = x_{i}^{d} + v_{i}^{d}$
-                    \STATE \COMMENT {then, position value must be brought to a binary domain}
-                    \IF {$\dfrac{1}{1 + e^{-x_{i}^{d}}} > Random[0,1)$}
-                        \STATE $x_{i}^{d} \leftarrow 1$
-                    \ELSE
-                        \STATE $x_{i}^{d} \leftarrow 0$
-                    \ENDIF
-                \ENDFOR
-                \STATE maximize \{$f_{1}(x_{i});-f_{2}(x_{i})$\}
-            \ENDFOR
-        \ENDWHILE
-        \RETURN post-process results and visualization
-    \end{algorithmic}
-    \caption{Common structure for a swarm intelligence method.}\label{alg:sim}
-\end{algorithm}
-
-Sed egestas arcu quis egestas bibendum. Aenean non lacus rutrum erat congue vestibulum in non quam. Vivamus tristique maximus purus quis volutpat. Etiam neque orci, tempor et sollicitudin vitae, lobortis eget quam. Maecenas dapibus commodo quam a condimentum. Sed varius, justo in laoreet efficitur, ex elit porta quam, in commodo elit diam vel dui. Mauris eget tortor commodo mauris blandit vulputate (Eq (\ref{eq:v})). 
-
-\begin{equation}\label{eq:v}
-v_{i}^{t+1} = \omega v_{i}^{t} + \alpha \epsilon_{1} [g^{*} - x_{i}^{t}] + \beta \epsilon_{2}[p_{i}^{*} - x_{i}^{t}]
+\begin{equation}
+\min_{x, y} Z = \sum_{j \in J} f_j y_j + \sum_{j \in J} \sum_{c \in C} o_j q_c x_{cj} + \sum_{c \in C} \sum_{j \in J} w_c d_{cj} x_{cj}
+\label{eq:objective}
 \end{equation}
 
-Cras accumsan neque quis nisi fringilla accumsan vitae vitae ipsum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nullam finibus scelerisque hendrerit. Ut augue ligula, faucibus ut porttitor in, semper nec orci. Nunc molestie est nulla, nec efficitur nibh vehicula eu. Nunc tempor tincidunt dui. Donec ullamcorper ornare mauris, id sodales tortor posuere sit amet (Eq (\ref{eq:p})).
+Sujeto a las siguientes restricciones sistemáticas:
+\begin{align}
+\sum_{j \in J} x_{cj} &= 1, \quad \forall c \in C \label{ctx:single_assignment} \\
+x_{cj} &\le y_j, \quad \forall c \in C, \, \forall j \in J \label{ctx:activation_gate} \\
+\sum_{c \in C} q_c x_{cj} &\le L_j y_j, \quad \forall j \in J \label{ctx:capacity} \\
+d_{cj} x_{cj} &\le D_{\max}, \quad \forall c \in C, \, \forall j \in J \label{ctx:distance} \\
+P_{\min} \le \sum_{j \in J} y_j &\le P \label{ctx:hub_bounds} \\
+x_{cj}, y_j &\in \{0, 1\}, \quad \forall c \in C, \, \forall j \in J \label{ctx:binary}
+\end{align}
 
-\begin{equation}\label{eq:p}
-x_{i}^{t+1} = x_{i}^{t} + v_{i}^{t+1}.
+La ecuación~\eqref{eq:objective} define la función de objetivo global, que minimiza tres componentes: costos fijos de activación totales, costos variables de procesamiento de demanda, y las distancias (con priorización ponderada) que los clientes deben caminar hacia los puntos de entrega. 
+La restricción ~\eqref{ctx:single_assignment} asegura que el cliente es asignado a exactamente un punto de entrega.
+La restricción ~\eqref{ctx:activation_gate} fuerza que un cliente solo pueda ser asignado a un punto de entrega si este punto ha sido seleccionado para su habilitación. 
+
+Restricción ~\eqref{ctx:capacity} previene que la demanda total asignada a un punto de entrega exceda su límite de capacidad $L_j$. La restricción ~\eqref{ctx:distance} asegura los límites de accesibilidad especial  $D_{\max}$ para la seguridad y comodidad de los clientes. La restricción ~\eqref{ctx:hub_bounds} acota el número total de hubs abiertos dentro de los umbrales de asignación de recursos.$[P_{\min}, P]$, mientras que la restricción~\eqref{ctx:binary} restringe el espacio de decisión a valores binarios.
+
+\section{Marcos Metaheurísticos}
+\label{sec:metaheuristic_frameworks}
+
+\subsection{Optimización por Enjambre de Partículas Binario (BPSO)}
+La optimización base de enjambre usa una formulación discreta modificada del algoritmo estándar de Optimización por Enjambre de Partículas~\cite{Shami2022}. Cada partícula $i$ dentro de un entorno de velocidad constante mantiene referencia de su vector de posición actual $x_i$, mejor coordenada personal histórica $p_i^*$, y mejor coordenada global del vencindario $g^*$. Para mapear los ajustes contínuos a las matrices binarias discretas requeridas por las ecuaciones ~\eqref{ctx:binary}, se aplica una función de mapeo signoídeo estándar. Las actualizaciones estructurales para la velocidad $v_{i,j}^{t+1}$ y estado binario $x_{i,j}^{t+1}$ entre cada iteración $t$ se calculan como se describe a continuación:
+
+\begin{equation}
+v_{i,j}^{t+1} = \theta v_{i,j}^t + \alpha \epsilon_1 \left( g_j^* - x_{i,j}^t \right) + \beta \epsilon_2 \left( p_{i,j}^* - x_{i,j}^t \right)
+\label{eq:bpso_velocity}
 \end{equation}
 
-Quisque efficitur leo sapien, id dictum eros scelerisque sit amet. Fusce hendrerit nulla sed ligula consequat laoreet. Fusce cursus ligula eu mattis vehicula. Ut placerat a enim vitae suscipit. Nam non sapien consequat, ornare tortor a, hendrerit lacus. Morbi aliquet ut sem eleifend pharetra. Vestibulum sed metus at libero viverra condimentum sed eget metus.
+\begin{equation}
+S\left( v_{i,j}^{t+1} \right) = \frac{1}{1 + \exp\left( -v_{i,j}^{t+1} \right)}
+\label{eq:bpso_sigmoid}
+\end{equation}
 
-%------------------------------------
-\section{Developed solution} 
-\label{sec:ds}
+\begin{equation}
+x_{i,j}^{t+1} = \begin{cases} 
+1, & \text{si } r_{i,j} < S\left( v_{i,j}^{t+1} \right) \\ 
+0, & \text{sino} 
+\end{cases}
+\label{eq:bpso_position}
+\end{equation}
 
-Aliquam tortor ipsum, faucibus quis tincidunt placerat, venenatis sit amet odio. Aliquam dapibus tellus in placerat ornare. Sed maximus elit at erat congue egestas. Mauris id porta nisl. Suspendisse maximus hendrerit eros quis malesuada. Morbi nec varius leo. Pellentesque molestie sollicitudin ultrices. Ut elementum posuere tellus, sit amet dapibus mauris tempor pharetra. Duis tincidunt leo ac rhoncus semper. Nullam quis enim nec libero efficitur mattis ut condimentum nibh. Nulla imperdiet turpis non quam ornare, sed auctor erat laoreet. Nunc laoreet dictum ex, vel tempus nisi blandit et. Phasellus varius libero quis elementum fringilla. Proin sit amet interdum nisl, sit amet maximus nunc. Vivamus dictum turpis rutrum ex commodo, in congue quam suscipit.
+donde $\theta = 0.7$ representa el coeficiente estático del momentum, $\alpha = 1.7$ y $\beta = 1.7$ son los parámetros de aceleración, y $\epsilon_1, \epsilon_2, r_{i,j} \sim \mathcal{U}(0, 1)$ representan variables aleatorias independientes uniformemente distribuidas.
 
-Sed ullamcorper finibus lectus ut porta. Ut neque tellus, interdum at turpis eget, pellentesque accumsan lectus. Vestibulum cursus augue ante, eget commodo nibh sagittis sit amet. Morbi faucibus, purus vitae dignissim ultricies, augue leo porttitor lorem, vel commodo ipsum orci in sapien. Phasellus vehicula quis mi eget aliquam. Suspendisse lacus dui, posuere lobortis imperdiet in, ultrices ut quam. Duis faucibus ipsum vel dolor venenatis venenatis. Etiam sit amet turpis at velit scelerisque egestas a eu nibh. Nam mauris turpis, auctor vitae elit nec, congue aliquam tortor. Nulla facilisi. Ut pretium fringilla risus vel semper. Donec pellentesque, dolor sed posuere interdum, arcu turpis vestibulum leo, in suscipit eros massa at felis. Quisque in fringilla diam, eu placerat quam. Phasellus at diam fermentum, scelerisque erat nec, maximus arcu. Fusce vehicula efficitur mollis. Phasellus placerat imperdiet augue, nec placerat dolor cursus eu (Table~\ref{tbl:d}).
+\subsection{Algoritmo de Optimización Binario de la Morsa (BWO)}
+El Optimizador Binario de la Morsa propuesto imita los comportamientos biológicos de los grupos de morsas, incluyendo migración, seguimiento de seguridad y maniobras de combate agresivas~\cite{han2023walrus}. Siendo $X_{i,j}^t$ la coordenada multidimensional de búsqueda del agente $i$ durante la iteración $t$. Los ajustes de posición son gobernados por tres estados primarios de comportamiento, dictados por un factor de balance adaptativo $\beta_t$:
 
-\begin{table}[!ht]
-    \centering
-    \begin{adjustbox}{max width=\linewidth}
-    \begin{tabular}{clccp{30ex}} 
-    \toprule
-        ID & Name & $n$ & $m$ \\ 
-    \midrule
-        ID1 & Name 1 & -- & -- \\
-        ID2 & Name 2 & -- & -- \\
-    \bottomrule
-    \end{tabular}
-    \end{adjustbox}
-    \caption{Caption of the table.}
-    \label{tbl:d}
+\begin{equation}
+X_{i,j}^{t+1} = \begin{cases}
+X_{i,j}^t + \alpha \cdot (X_{\text{target},j} - X_{i,j}^t), & \text{Migración} \\
+X_{i,j}^t + \beta_t \cdot \gamma \cdot (X_{\text{best},j} - X_{i,j}^t), & \text{Protección} \\
+X_{i,j}^t - \delta \cdot |X_{\text{combat},j} - X_{i,j}^t|, & \text{Combate}
+\end{cases}
+\label{eq:bwo_continuous}
+\end{equation}
+
+Para cumplir con los requisitos discretos de las restricciones de ubicación de TMLPA, los vectores de ubicación continuos se mapean a un dominio binario utilizando una función de transformación hiperbólica algebraica.:
+
+\begin{equation}
+T\left( X_{i,j}^{t+1} \right) = \left| \tanh\left( X_{i,j}^{t+1} \right) \right|
+\label{eq:bwo_tanh}
+\end{equation}
+
+\begin{equation}
+X_{\text{binario}, i,j}^{t+1} = \begin{cases}
+1, & \text{si } \rho_{i,j} < T\left( X_{i,j}^{t+1} \right) \\
+0, & \text{sino}
+\end{cases}
+\label{eq:bwo_binary}
+\end{equation}
+donde $\rho_{i,j} \sim \mathcal{U}(0, 1)$ actúa como parámetro umbral de exploración estocástica.
+
+\subsection{Motor de Aplicación de Restricciones}
+Para garantizar la factibilidad estructural desde las restricciones ~\eqref{ctx:single_assignment} hasta \eqref{ctx:distance}, ambos algoritmos interactúan con un módulo automatizado de asignación ávida. Cuando una partícula metaheurística actualiza su vector de posición, cambia la matriz de activación del punto de entrega $y$. Si la configuración del punto de entrega activo traspasa los límites presupuestarios $[P_{\min}, P]$, una heurística de reparación modifica aleatoriamente los bits de la instalación hasta que el vector sea válido.
+
+Una vez que una matriz válida de activación de un punto de entrega $y$ es establecida, cada cliente $c \in C$ es asignado a su punto de entrega más cercano que cumpla tanto con el límite de distancia $D_{\max}$ y la restricción de capacidad máxima $L_j$. Si un cliente dado no puede ser asignado válidamente debido a la capacidad o distancia, todo el vector de configuración del punto de entrega $y$ es penalizado con un multiplicador de costo máximo ($10^6$), forzando al emjambre a rechazar regiones de búsqueda infactibles.
+
+\section{Configuración Experimental}
+\label{sec:experimental_setup}
+El perfil empírico de ambas metaheurísticas se evaluó en tres instancias de referencia, que representan distintos niveles de escala urbana:
+\begin{itemize}
+    \item \textbf{Escala Pequeña} (\texttt{instance\_small.dzn}): $3 \times 5$ clientes.
+    \item \textbf{Escala Mediana} (\texttt{instance\_medium.dzn}): $10 \times 25$ clientes.
+    \item \textbf{Escala Grande} (\texttt{instance\_large.dzn}): $20 \times 50$ clientes.
+\end{itemize}
+
+Para aislar el comportamiento estocástico de la metaheurística, cada algoritmo fue ejecutado en 30 iteraciones independientes utilizando semillas aleatorias distintas y aisladas que abarcaban el intervalo de enteros $[43, 72]$. El tamaño de la pobación para cada enjambre fue fijado en 30 agentes, rastreando sus trayectorias a lo largo de una profundidad generacional de 100 ocurrencias por iteración independiente.
+
+Para proteger la integridad de los datos, un filtro dinámico de manejo de valores atípicos fue ejecutado en los límites de cada bloque de ejecución. 
+Luego de completar una instancia de 30 iteraciones, se calculó el Rango Intercuartil (IQR) de los costos objetivos. Cualquier ejecución que resulte en un valor fuera del límite $[Q_1 - 1.5 \times \text{IQR}, Q_3 + 1.5 \times \text{IQR}]$ se clasifica como un valor atípico estadístico. Estos valores fueron removidos del conjunto de datos y ejecutados nuevamente bajo una semilla independiente nueva, manteniendo un tamaño de muestra estable de $N=30$ ejecuciones válidas para el análisis estadístico posterior.
+
+Se certificaron límites globales reales mediante rutinas de cómputo paralelizadas de tipo branch and cut (ramificación y corte) Mixed-Integer Linear Programming (MILP) mediante el motor HiGHS dentro de una interfaz de línea de comandos de MiniZinc~\cite{nethercote2007minizinc}. Para reducir el tiempo de espera, todos los cálculos fueron desarrollados en un servidor Dell PowerEdge T140 con un procesador Intel Xeon E-2124 processor con frecuencia de 3.30 GHz y 20 GB de memoria RAM DDR4.
+
+\section{Análisis de Resultados Empíricos}
+\label{sec:results}
+
+\subsection{Matriz de Rendimiento Cuantitativo}
+El resumen estadístico de todas las instancias se encuentra compilado en la tabla ~\ref{tab:descriptive_metrics}. Además se determinó como Brecha de Optimización el porcentaje de desviación del mejor resultado de cada algoritmo sobre el valor base exacto determinado mediante el motor HiGHS MILP.
+
+\begin{table*}[t]
+\centering
+\caption{Matriz de Rendimiento Consolidada: Metaheurísticas vs. Límites HiGHS Exactos}
+\label{tab:descriptive_metrics}
+\small
+\begin{threeparttable}
+\begin{tabular}{llrrrrrrr}
+\toprule
+\textbf{Instancia} & \textbf{Motor/Algoritmo} & \textbf{Mejor Costo} & \textbf{Peor Costo} & \textbf{$\mu$\tnote{1}} & \textbf{$\sigma$\tnote{2}} & \textbf{SRate\tnote{3}} & \textbf{SSpeed\tnote{4}} & \textbf{Outliers\tnote{5}} \\
+\midrule
+\textbf{Pequeño} & Límite real HiGHS  & \textbf{84.2000} & -- & -- & -- & -- & -- & -- \\
+(3 Hubs / 5 Clients) & Binary PSO Baseline & 84.2000 & 84.2000 & 84.2000 & 0.0000 & 1.0000 & 1.0100 & 0 \\
+& Binary Walrus (Proposed) & 84.2000 & 84.2000 & 84.2000 & 0.0000 & 1.0000 & 1.0100 & 0 \\
+\midrule
+\textbf{Mediano} & Límite real HiGHS  & \textbf{452.0000} & -- & -- & -- & -- & -- & -- \\
+(10 Hubs / 25 Clients) & Binary PSO Baseline & 461.0000 & 461.0000 & 461.0000 & 0.0000 & 0.0000 & 0.0000 & 0 \\
+& Binary Walrus (Proposed) & 464.8000 & 473.5000 & 468.9767 & 2.5127 & 0.0000 & 0.0000 & 2 \\
+\midrule
+\textbf{Grande} & Límite real HiGHS  & \textbf{915.2000} & -- & -- & -- & -- & -- & -- \\
+(20 Hubs / 50 Clients) & Binary PSO Baseline & 920.3000 & 946.9000 & 930.6000 & 7.8947 & 0.0000 & 0.0000 & 0 \\
+& Binary Walrus (Proposed) & 933.1000 & 1076.4000 & 1006.1533 & 34.2454 & 0.0000 & 0.0000 & 0 \\
+\bottomrule
+\end{tabular}
+
+% --- Professional Footnote Expansion Block ---
+\begin{tablenotes}\footnotesize
+    \item[1] \textbf{$\mu$}: Costo promedio de la función objetivo calculado sobre exactamente $N=30$ ejecuciones independientes.
+    \item[2] \textbf{$\sigma$}: Desviación estándar muestral; mide la dispersión del enjambre y el nivel de exploración.
+    \item[3] \textbf{SRate} (\textit{Success Rate}): Tasa de éxito. Proporción de ejecuciones que alcanzaron la solución óptima exacta global.
+    \item[4] \textbf{SSpeed} (\textit{Search Speed}): Velocidad de búsqueda; métrica de tiempo de convergencia generacional normalizado.
+    \item[5] \textbf{Outliers}: Cantidad de ejecuciones anómalas detectadas por el filtro estadístico IQR y reemplazadas en caliente.
+\end{tablenotes}
+\end{threeparttable}
+\end{table*}
+
+En la configuración a pequeña escala (\texttt{instance\_small.dzn}), ambos algoritmos demostraron absoluta estabilidad estructural. El módulo de asignación ávida manejó efectivamente este espacio de búsqueda reducido, permitiendo que ambos enjambres encuentren el óptimo global exacto de $84.2000$ en cada ejecución. Esto resultó en tasas de éxito perfectas ($\text{SRate} = 1.0000$), velocidades idénticas($\text{SSpeed} = 1.0100$), y cero variabilidad ($\sigma = 0.0000$). El vector de disposición estructural encontrado coincide con el plano exacto real. $y = [1, 0, 1]$.
+
+En el problema a escala mediana (\texttt{instance\_medium.dzn}), el mínimo global matemático se estableció en $452.0000$ por el modelo HiGHS branch-and-cut ($y = [1, 1, 1, 0, 0, 0, 1, 0, 0, 1]$). Ninguna de las metaheurísticas encontró este objetivo global debido a un mínimo local multimodal engañoso de $461.0000$. BPSO exhibe convergencia prematura con todas las 30 ejecuciones atrapando al enjambre en esta meseta de costos local ($\mu = 461.0000$, $\sigma = 0.0000$), resultando en una brecha de optimización de $+1.99\%$ ($y = [1, 1, 1, 0, 1, 0, 0, 0, 0, 1]$). 
+
+En contraste, el Optimizador de la Morsa propuesto mantuvo su comportamiento de búsqueda exploratorio, evitando un estancamiento temprano ($\sigma = 2.5127$). Alcanzó un mejor costo de configuración de $464.8000$ (brecha de optimización$+2.83\%$) y tuvo un perfil de rendimiento promedio de $468.9767$. Durante éstas ejecuciones a escala media, el filtro de valores atípicos fue gatillado dos veces, removiendo dos puntos de datos anómalos y reemplazándolos con ejecuciones independientes válidas para proteger la integridad de la muestra. 
+
+En la configuración a mayor escala (\texttt{instance\_large.dzn}), el límite global exacto se verificó en $915.2000$ ($y = [0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]$). El algoritmo base BPSO convergió estrechamente alrededor del piso global, logrando un costo mínimo de $920.3000$, una brecha de optimización de solo $+0.56\%$. Sus ejecuciones permanecieron agrupadas estrechamente, evidenciado por la desviación estándar $7.8947$ y costo medio de $930.6000$. 
+
+El algoritmo propuesto BWO exhibió una distribución exploratorio significativamente mayor dentro del universo aumentado de esta instancia ($\sigma = 34.2454$), convergiendo en una mejor solución de $933.1000$ ($+1.96\%$ brecha de optimización) y un costo promedio de $1006.1533$. No se manifestaron valores atípicos ni se requirieron reemplazos durante las ejecuciones a mayor escala.
+
+\subsection{Inferencias no paramétricas}
+Debido a que las soluciones obtenidas por los algoritmos estocásticos no garantizan una distribución normal, de acuerdo con la metodología propuesta por Derrac et al. \cite{derrac2011practical}, se aplicó la prueba no paramétrica bilateral de Mann-Whitney-Wilcoxon para evaluar la significancia estadística de las diferencias de rendimiento observadas entre BPSO y el algoritmo BWO propuesto. Las métricas estadísticas resultantes para cada escala del problema se resumen en la Tabla~\ref{tab:statistical_inference}.
+
+\begin{table}[h]
+\centering
+\caption{Métricas prueba de hipótesis de Mann-Whitney-Wilcoxon ($N=30$)}
+\label{tab:statistical_inference}
+\small
+\begin{tabular}{lrr}
+\toprule
+\textbf{Magnitud Instancia} & \textbf{U-Statistic} & \textbf{\textit{p}-value} \\
+\midrule
+Pequeño ($3 \times 5$) & 450.00 & 1.00000 \\
+Mediano ($10 \times 25$) & 0.00 & 0.00000 \\
+Grande ($20 \times 50$) & 10.50 & 0.00000 \\
+\bottomrule
+\end{tabular}
 \end{table}
 
-Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et orci non tortor lacinia tempus cursus in ligula. Etiam nisi ex, dignissim vel gravida in, placerat sed orci. Nunc eu viverra mi. Praesent sit amet magna non turpis varius laoreet in quis dolor. Pellentesque aliquet auctor mauris aliquet tincidunt. Mauris vel nibh imperdiet, cursus leo quis, porta risus. Praesent posuere purus ligula, sit amet accumsan sem ultricies sit amet. Vivamus ac ipsum lacus.
+Los resultados de la prueba confirman diferentes comportamientos estructurales entre las magnitudes de las instancias:
+\begin{itemize}
+    \item Para la instancia pequeña, el $p$-value de $1.00000$ indica que no existe una diferencia estadística, confirmando que ambos enjambres convergieron hacia perfiles globales determinísticos idénticos.
+    \item En la magnitud media, el $U$-statistic bajó a $0.00$, causando un $p$-value asintótico de $0.00000$. Esto confirma un cambio estadístico altamente significativo causado por el estancamiento completo de BPSO en $461.0000$ comparado con la distribución más amplia de BWO.
+    \item Para la escala mayor, la prueba arrojó un $U$-statistic de $10.50$ y un $p$-value de $0.00000$. Esto indica que la proximidad superior de BPSO al límite global es estatísticamente significativa, mostrando una divergencia clara en el rendimiento entre ambos algoritmos a mayor escala.
+\end{itemize}
 
-Quisque eu egestas diam. Nulla placerat ex eu efficitur consectetur. Aliquam lacinia efficitur lectus non scelerisque. Nulla convallis metus at est aliquam venenatis. Aliquam quis vehicula magna. Praesent fermentum nisi in interdum sodales. Praesent nec pellentesque ligula, et vulputate ex. Donec tincidunt erat egestas, ultrices augue id, lobortis sem. Quisque ullamcorper semper augue at auctor. Aliquam ac consequat sem. Praesent eu sagittis dui, at vulputate lectus.
-
-Aenean orci ipsum, posuere quis blandit in, dapibus vitae dolor. Aliquam non nulla hendrerit justo pellentesque venenatis id ac eros. Curabitur lectus dui, consequat ac sagittis id, fringilla id nibh. Aliquam sit amet arcu eget nisl scelerisque porttitor quis vitae quam. Quisque blandit ligula ut efficitur dapibus. Nullam sem orci, convallis ac lorem ut, tincidunt malesuada nunc. Morbi sed tortor et tellus accumsan ornare quis sed mi. Mauris eget arcu nec quam dignissim mollis in nec elit. Vivamus tincidunt malesuada sapien. Mauris volutpat magna in nisl rhoncus, sed luctus risus commodo. Nam at ante ac elit ullamcorper eleifend vel non mauris. Maecenas tincidunt vel ipsum ut tristique. Quisque non urna vel purus sollicitudin vestibulum. Aenean ut enim ligula.
-
-%------------------------------------
-\section{Experimental setup}
-\label{sec:ex}
-
-Suspendisse gravida leo lacinia, egestas felis et, tincidunt quam. Fusce a ex in lorem porttitor mattis. Donec venenatis risus sapien, in semper ex tempus in. In facilisis leo nisi, ac dapibus tellus auctor non. Nunc maximus luctus elit, id aliquam felis volutpat id. Aenean nisi velit, laoreet interdum rhoncus ut, bibendum vel ex. Mauris vel velit ac dui feugiat pulvinar non sed augue. Suspendisse porttitor lectus nec elit accumsan, quis ullamcorper nunc cursus. Phasellus sapien arcu, semper a mi non, fermentum efficitur eros. Quisque facilisis mi ac magna facilisis commodo. Nunc at dolor aliquam, sodales nunc eu, venenatis enim. Cras sed porta ex. Etiam facilisis, libero vitae pellentesque semper, quam orci suscipit eros, in tincidunt dui nibh nec justo. Morbi aliquet massa vel dolor tincidunt laoreet.
-
-Ut mattis fringilla blandit. Nullam blandit augue id sem tristique hendrerit. Curabitur quis suscipit urna. Nullam id enim vel nisi lacinia pulvinar. Aenean maximus, massa et dictum malesuada, lectus ligula aliquet massa, nec luctus risus erat a nulla. In quis arcu velit. Fusce justo sapien, congue aliquam vestibulum vitae, vulputate sed felis. Nullam arcu magna, consectetur id imperdiet sit amet, cursus eget ipsum. Nullam nec euismod mauris. Aenean quis viverra mauris. Morbi vestibulum velit consectetur est varius, vitae vestibulum sapien blandit. Sed volutpat libero augue, quis eleifend arcu dictum vulputate. Duis non enim porttitor, pretium tellus at, posuere mi. Mauris iaculis quam vitae eros elementum, et fermentum metus hendrerit.
-
-Fusce fermentum maximus odio, at pellentesque ipsum ultricies sed. Nulla facilisi. Donec egestas sed est vitae efficitur. Vivamus vulputate sagittis orci vel lobortis. Proin eget est luctus, vestibulum orci sit amet, consequat dui. Nam nulla ligula, accumsan in nulla et, tincidunt malesuada est. Donec vel egestas velit. Proin in vulputate odio. Integer ac aliquet enim, sed vestibulum nunc. Duis rhoncus neque sit amet odio lacinia rhoncus. Nulla viverra nibh eget purus aliquam ultricies. Aenean sollicitudin ullamcorper tempor. Vivamus malesuada felis eu neque viverra, at euismod lacus condimentum. Etiam vel egestas lacus.
-
-Proin at dignissim quam. Donec hendrerit bibendum metus, quis pretium leo pharetra non. Proin finibus risus ligula, in tincidunt leo blandit in. Praesent efficitur orci sit amet varius iaculis. Nullam eu viverra massa. Vestibulum lobortis eleifend mauris, quis ultrices metus volutpat commodo. Morbi purus sem, rhoncus id vestibulum sed, malesuada quis mi. Etiam faucibus venenatis porttitor. In eu metus quis leo posuere finibus sit amet eget libero. Nunc aliquet massa eu tristique vestibulum. Curabitur aliquam consectetur ex ac facilisis. In luctus aliquam mauris sed vestibulum. Sed imperdiet libero id lacus porttitor faucibus. Suspendisse mauris erat, fermentum faucibus pretium ac, convallis non justo.
-
-%------------------------------------
-\section{Results and discussion}
-\label{sec:res}
-
-Maecenas porta ligula et diam euismod, eu cursus ante tempus. Quisque et ex posuere, iaculis arcu sit amet, dictum libero. Maecenas dolor sapien, egestas vitae iaculis eu, laoreet quis diam. Vivamus et rhoncus justo. Nam rhoncus quis tortor quis dignissim. Aliquam et iaculis est, vel elementum ipsum. Nullam enim neque, aliquam a bibendum tincidunt, posuere a dui. Morbi at nibh sit amet purus tempor viverra. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Praesent ut tortor sit amet purus posuere dignissim ut vestibulum urna (Figure~\ref{fig:e}).
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=.9\linewidth]{img/fig1.png}
-    \caption{Caption of the figure}
-    \label{fig:e}
-\end{figure}
-
-Etiam venenatis malesuada fringilla. Donec vestibulum eget felis ut gravida. Mauris tellus massa, rutrum a odio a, facilisis mattis risus. Maecenas a elit eu sapien rutrum consequat in et velit. Fusce lacinia volutpat nulla vel bibendum. Fusce nec pharetra purus. Integer facilisis, eros a pharetra maximus, magna odio lacinia est, quis scelerisque ex leo ut mi. Morbi eget consequat quam. Maecenas et nisl a leo fringilla vehicula eget ut ante. Duis porta ipsum ac tincidunt tincidunt. Aenean euismod dolor vel lorem pretium, non finibus felis consectetur. Suspendisse consectetur tellus tortor, at molestie nisi eleifend vel. Etiam nec facilisis nulla.
-
-Nam ipsum nisl, ultrices at vestibulum eget, venenatis sed eros. Phasellus sit amet suscipit urna. Etiam ut lectus sed ante suscipit tempor ut at mauris. Aliquam erat volutpat. Nunc et tellus ullamcorper, tempus nisi vitae, venenatis mauris. Mauris at urna vitae lectus vehicula aliquam. Duis nec felis eget purus sodales elementum in vitae dui. Nunc ultrices ligula elit, id aliquet metus interdum nec. Donec varius gravida velit eu mattis. Etiam ex purus, semper eu convallis eget, ullamcorper eget nunc. Nam sagittis, orci in lobortis laoreet, ligula ligula bibendum nunc, eget bibendum justo neque facilisis neque. Quisque ut mollis quam. Nulla tempor sagittis nisi, eu semper lorem porta quis. Sed enim nisi, tincidunt ac nisi a, vulputate feugiat neque. Nam quis blandit nunc. Vestibulum at tincidunt lectus, et molestie massa.
-
-Mauris pulvinar lacus eu urna efficitur, quis tempus lectus varius. Proin nec efficitur eros, sit amet fringilla eros. Proin vel leo vel diam pretium condimentum a vulputate velit. Praesent facilisis orci non erat rutrum, sed varius risus volutpat. Nullam maximus efficitur elit vitae aliquam. Quisque nec gravida libero. Nullam venenatis imperdiet sapien, id tincidunt nisl suscipit dignissim. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus purus sem, pharetra et pharetra efficitur, iaculis vitae dui. Morbi quis sem quis sapien porta ultrices. Vestibulum ac magna mattis, convallis nunc in, varius dolor. Praesent convallis, lacus vel vulputate blandit, dui leo malesuada velit, eu viverra massa tellus at sem. Vestibulum purus ante, tempor nec tortor et, sodales mattis nibh. Vivamus vel porta elit. Etiam nec cursus nunc.
-
-Etiam dapibus maximus dui et pharetra. Sed ut nisi blandit, pulvinar diam vestibulum, tempor arcu. Donec fringilla nisi et ornare tristique. Donec sagittis enim et ullamcorper volutpat. Vivamus aliquet magna quam, vitae faucibus turpis pellentesque id. Integer at neque non mi pharetra interdum. Quisque non posuere metus, sit amet auctor nulla. Aenean ultrices congue justo, in mattis nibh auctor vitae. Suspendisse eu odio efficitur, imperdiet erat eu, eleifend odio. Duis lobortis lectus ligula, sed rutrum ex facilisis nec. Proin dui urna, feugiat in turpis at, mattis facilisis arcu. 
-
-%------------------------------------
-\section{Conclusions and future work}
-\label{sec:cf}
-
-Etiam eros nunc, pellentesque eleifend sodales hendrerit, pretium ut lorem. Aliquam leo lectus, fringilla vel condimentum varius, mattis quis enim. Suspendisse vestibulum ipsum mauris, vitae auctor massa feugiat eget. Vivamus eros dolor, tempus in sem vitae, consectetur condimentum ipsum. Aenean tortor massa, faucibus nec turpis eu, congue imperdiet orci. Nullam congue nunc ligula, vitae tristique enim interdum ut. Sed nibh turpis, auctor eget nunc sit amet, convallis sagittis sapien. Duis non nibh lacus. Ut pellentesque nisl vitae ex venenatis, ac lacinia eros rutrum.
-
-Cras lacinia erat sollicitudin quam eleifend vestibulum. Mauris ut felis commodo, dictum risus sed, imperdiet tellus. Vestibulum ut dignissim enim. Mauris felis urna, commodo id diam sit amet, dapibus dapibus lectus. Phasellus in hendrerit est. Fusce lobortis tincidunt gravida. Donec porta consectetur nisi, ac ullamcorper enim blandit vitae. Sed vestibulum, eros ut rhoncus sodales, arcu purus dignissim lectus, ac vestibulum tellus justo non ex. Nullam scelerisque, purus id maximus aliquam, tellus eros auctor mauris, eu vestibulum nisi ante eget mi. Phasellus vitae vehicula magna, vitae fermentum erat. Aliquam risus urna, facilisis ornare iaculis vitae, suscipit ut est. Integer consectetur, nibh quis volutpat rutrum, justo nisl suscipit ligula, ut lacinia nisl eros sed lorem.
-
-Phasellus at eros in lorem pellentesque volutpat. Quisque dapibus blandit tristique. Donec massa turpis, imperdiet at congue quis, blandit eget magna. In viverra ligula eleifend, rutrum sem non, blandit ante. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin iaculis ex leo, vel malesuada ipsum auctor eget. Morbi maximus ligula arcu, sit amet lacinia enim consequat sit amet. Vivamus et erat pretium ante eleifend vestibulum vel blandit risus. Nam sit amet fermentum nulla. Aenean luctus nulla mauris, vitae vestibulum est sagittis quis. Nullam eu enim ornare, laoreet nunc et, fermentum nisi. Maecenas rutrum elit velit, tristique egestas quam pellentesque condimentum. Maecenas eu purus risus. Vestibulum ac magna in massa ornare dignissim eget et orci.
-
-%\section*{Acknowledgement}
-%Agradecer a ...
 
 %------------------------------------
 \bibliography{refs}
