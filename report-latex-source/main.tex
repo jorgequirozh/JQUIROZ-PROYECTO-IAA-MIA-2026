@@ -33,13 +33,14 @@
   \def\corref#1{}%
 }
 
-\bibliographystyle{elsarticle-num}
+\bibliographystyle{IEEEtran}
 
 \begin{document}
 
 \begin{frontmatter}
 
-\title{Optimización del problema de localización de puntos de pick-up mediante microhubs temporales (TMLPA) utilizando el Algoritmo de la Morsa Binario}
+\title{Optimización del problema de localización de microhubs y asignación peatonal (TMLPA) utilizando el Algoritmo de la Morsa Binario}
+
 
 \author[uv]{Jorge Quiroz Hernández\corref{cor}}
 
@@ -47,7 +48,7 @@
 \cortext[cor]{Corresponding author}\ead{jorge.quirozh@postgrado.uv.cl}
 
 \begin{abstract}
-La logística de transporte urbano de carga enfrenta importantes cuellos de botella operativos durante las horas de mayor demanda, lo que exige paradigmas de distribución más flexibles. Este estudio evalúa el Problema de Localización y Asignación de Microhubs de Dos Escalones (TMLPA) con el objetivo de minimizar los costos fijos de instalación, los costos de procesamiento y las distancias de caminata. Se introduce el Algoritmo de la Morsa Binario (BWO) con mecánicas de explotación multimodales, evaluando su rendimiento frente a una línea base de Optimización por Enjambre de Partículas Binario (BPSO) y los límites exactos de Programación Lineal Entera Mixta (MILP) resueltos mediante el motor HiGHS. A lo largo de 30 ejecuciones independientes, se identificaron los valores atípicos mediante filtros estadísticos y se reemplazaron en tiempo real para garantizar la integridad de las muestras. En escalas pequeñas (3 hubs, 5 clientes), ambas metaheurísticas alcanzaron una precisión del $100\%$, igualando el óptimo global exacto de $84,2000$. En matrices medianas (10 hubs, 25 clientes), BPSO convergió prematuramente a un pozo local de $461,0000$ ($+1,99\%$ de brecha) debido a una pérdida total de diversidad, mientras que BWO preservó la varianza exploratoria, alcanzando un mejor valor de $464,8000$ ($+2,83\%$ de brecha). En la escala más grande (20 hubs, 50 clientes), BPSO logró acercarse al límite global ($915,2000$) con un costo mínimo de $920,3000$ ($+0,56\%$ de brecha), mientras que BWO equilibró un rango de búsqueda más amplio alcanzando los $933,1000$ ($+1,96\%$ de brecha). Las pruebas no paramétricas de Mann-Whitney-Wilcoxon confirmaron diferencias significativas en la distribución ($p < 0,0001$) en escalas medianas y grandes, mapeando los límites explícitos para el despliegue de heurísticas en topografías de asignación no lineales.
+La logística de transporte urbano de carga enfrenta importantes cuellos de botella operativos durante las horas de mayor demanda, lo que exige paradigmas de distribución más flexibles. Este estudio evalúa el Problema de Localización de Microhubs y Asignación Peatonal (TMLPA) con el objetivo de minimizar los costos fijos de instalación, los costos de procesamiento y las distancias de caminata. Se introduce el Algoritmo de la Morsa Binario (BWO) con mecánicas de explotación multimodales, evaluando su rendimiento frente a una línea base de Optimización por Enjambre de Partículas Binario (BPSO) y los límites exactos de Programación Lineal Entera Mixta (MILP) resueltos mediante el motor HiGHS. A lo largo de 30 ejecuciones independientes, se identificaron los valores atípicos mediante filtros estadísticos y se reemplazaron en tiempo real para garantizar la integridad de las muestras. En escalas pequeñas (3 puntos de entrega, 5 clientes), ambas metaheurísticas alcanzaron una precisión del $100\%$, igualando el óptimo global exacto de $84,2000$. En matrices medianas (10 puntos de entrega, 25 clientes), BPSO convergió prematuramente a un pozo local de $461,0000$ ($+1,99\%$ de brecha) debido a una pérdida total de diversidad, mientras que BWO preservó la varianza exploratoria, alcanzando un mejor valor de $464,8000$ ($+2,83\%$ de brecha). En la escala más grande (20 puntos de entrega, 50 clientes), BPSO logró acercarse al límite global ($915,2000$) con un costo mínimo de $920,3000$ ($+0,56\%$ de brecha), mientras que BWO equilibró un rango de búsqueda más amplio alcanzando los $933,1000$ ($+1,96\%$ de brecha). Las pruebas no paramétricas de Mann-Whitney-Wilcoxon confirmaron diferencias significativas en la distribución ($p < 0,0001$) en escalas medianas y grandes, mapeando los límites explícitos para el despliegue de heurísticas en topografías de asignación no lineales.
 \end{abstract}
 
 \begin{keyword}
@@ -60,14 +61,14 @@ Logística de última milla \sep Localización y asignación de microhubs \sep A
 \label{sec:introduction}
 La expansión exponencial del comercio electrónico ha generado una presión significativa sobre la infraestructura de distribución de última milla en entornos metropolitanos. Los envíos directos al consumidor provocan un incremento en la congestión vehicular, en las emisiones de carbono y en la complejidad de la planificación de rutas de entrega. Para mitigar estos impactos urbanos, los microhubs temporales han emergido como una alternativa descentralizada y eficiente. Estos puntos funcionan como centros de consolidación local donde los paquetes se agrupan, lo que permite a los transportistas realizar entregas en lotes y transferir el tramo final del trayecto al consumidor.
 
-La optimización de estos sistemas requiere resolver dos subproblemas de manera simultánea: determinar qué puntos de entrega potenciales deben habilitarse a partir de un conjunto finito de espacios disponibles, y asignar los usuarios a los nodos activos respetando las restricciones operacionales. Este desafío se denomina Problema de Localización y Asignación de Microhubs de Dos Eslabones (***Two-Echelon Microhub Location-Allocation Problem*** o TMLPA). El objetivo principal consiste en minimizar una función de costo global no lineal que integra los costos fijos de habilitación, las tarifas de procesamiento dependientes de la demanda y las penalizaciones por insatisfacción del cliente ponderadas por su nivel de prioridad.
+La optimización de estos sistemas requiere resolver dos subproblemas de manera simultánea: determinar qué puntos de entrega potenciales deben habilitarse a partir de un conjunto finito de espacios disponibles, y asignar los usuarios a los nodos activos respetando las restricciones operacionales. Este desafío se denomina Problema de Localización de Microhubs y Asignación Peatonal (TMLPA) (***Two-Echelon Microhub Location-Allocation Problem***). El objetivo principal consiste en minimizar una función de costo global no lineal que integra los costos fijos de habilitación, las tarifas de procesamiento dependientes de la demanda y las penalizaciones por insatisfacción del cliente ponderadas por su nivel de prioridad.
 
 A pesar de que los enfoques matemáticos deterministas, como la programación lineal entera mixta (MILP, por sus siglas en inglés), aseguran la obtención de óptimos globales en instancias acotadas, sus tiempos de cómputo escalan de forma exponencial respecto al número de hubs y clientes candidatos. Este cuello de botella computacional invalida su uso para la toma de decisiones en tiempo real o para la planificación en escenarios urbanos de gran escala. Por consiguiente, las metaheurísticas de enjambre bioinspiradas se han consolidado como la estrategia predominante para explorar eficientemente estos espacios de búsqueda no lineales \cite{Shami2022}.
 
 Este estudio, implementa un marco de evaluación competitivo para resolver este desafío. Las contribuciones principales de este trabajo son:
 
 \begin{enumerate}
-    \item Se introduce una formulación binaria del Algoritmo de Optimización de la Morsa (***Binary Walrus Optimizer***, BWO)~\cite{han2023walrus} para resolver las restricciones de ubicación y asignación del TMLPA.
+    \item Se introduce una formulación binaria del Algoritmo de Optimización de la Morsa (***Binary Walrus Optimizer***, BWO)~\cite{han2023walrus} para resolver las restricciones de localización y asignación peatonal del TMLPA.
     \item Se realizan pruebas de rendimiento comparativas frente a una implementación de referencia de Optimización por Enjambre de Partículas Binario (BPSO) sobre tres escalas de magnitud distintas ($3 \times 5$, $10 \times 25$ y $20 \times 50$).
     \item Se establecen métricas de verdad absoluta empírica para todas las evaluaciones, utilizando el motor de optimización MILP HiGHS integrado en la plataforma MiniZinc~\cite{nethercote2007minizinc}.
     \item Se aplican filtros de control de calidad estadístico explícitos durante la recolección de datos ($N=30$), identificando, eliminando y reejecutando dinámicamente los valores atípicos para preservar el tamaño de la muestra y la validez de las inferencias no paramétricas posteriores. 
@@ -178,6 +179,8 @@ Con el fin de resguardar la integridad de los datos, se aplicó un filtro dinám
 
 Los límites globales exactos se certificaron mediante rutinas de cómputo en paralelo empleando el método de ramificación y corte (***branch and cut***) para Programación Lineal Entera Mixta (MILP) a través del motor de optimización HiGHS, integrado en la interfaz de línea de comandos de MiniZinc~\cite{nethercote2007minizinc}. Para optimizar los tiempos de procesamiento, todos los experimentos se desarrollaron en un servidor Dell PowerEdge T140 configurado con un procesador Intel Xeon E-2124 de $3,30$ GHz y $20$ GB de memoria RAM DDR4.
 
+Los códigos fuente del modelo MiniZinc, los scripts de las metaheurísticas y las instancias evaluadas se encuentran disponibles de forma pública en el repositorio de GitHub (\url{https://github.com/jorgequirozh/JQUIROZ-PROYECTO-IAA-MIA-2026}).
+
 \section{Análisis de Resultados Empíricos}
 \label{sec:results}
 
@@ -190,30 +193,31 @@ El resumen estadístico asociado al desempeño de todas las instancias evaluadas
 \label{tab:descriptive_metrics}
 \small
 \begin{threeparttable}
-\begin{tabular}{llrrrrrrr}
+\begin{tabular}{llrrrrrrrrr}
 \toprule
-\textbf{Instancia} & \textbf{Motor/Algoritmo} & \textbf{Mejor Costo} & \textbf{Peor Costo} & \textbf{$\mu$\tnote{1}} & \textbf{$\sigma$\tnote{2}} & \textbf{SRate\tnote{3}} & \textbf{SSpeed\tnote{4}} & \textbf{Outliers\tnote{5}} \\
+\textbf{Instancia} & \textbf{Algoritmo/Motor} & \textbf{Mejor} & \textbf{Peor} & \textbf{$\mu$\tnote{1}} & \textbf{Mediana} & \textbf{$\sigma$\tnote{2}} & \textbf{IQR\tnote{3}} & \textbf{SR\tnote{4}} & \textbf{SS\tnote{5}} & \textbf{Out\tnote{6}} \\
 \midrule
-\textbf{Pequeña} & Óptimo Global HiGHS  & \textbf{84,2000} & -- & -- & -- & -- & -- & -- \\
-(3 Puntos / 5 Clientes) & BPSO & 84,2000 & 84,2000 & 84,2000 & 0,0000 & 1,0000 & 1,0100 & 0 \\
-& BWO & 84,2000 & 84,2000 & 84,2000 & 0,0000 & 1,0000 & 1,0100 & 0 \\
+\textbf{Pequeña} & Óptimo HiGHS & \textbf{84,2000} & -- & -- & -- & -- & -- & -- & -- & -- \\
+($3 \times 5$) & BPSO & 84,2000 & 84,2000 & 84,2000 & 84,2000 & 0,0000 & 0,0000 & 1,0000 & 1,0100 & 0 \\
+ & BWO & 84,2000 & 84,2000 & 84,2000 & 84,2000 & 0,0000 & 0,0000 & 1,0000 & 1,0100 & 0 \\
 \midrule
-\textbf{Mediana} & Óptimo Global HiGHS  & \textbf{452,0000} & -- & -- & -- & -- & -- & -- \\
-(10 Puntos / 25 Clientes) & BPSO & 461,0000 & 461,0000 & 461,0000 & 0,0000 & 0,0000 & 0,0000 & 0 \\
-& BWO & 464,8000 & 473,5000 & 468,9767 & 2,5127 & 0,0000 & 0,0000 & 2 \\
+\textbf{Mediana} & Óptimo HiGHS & \textbf{452,0000} & -- & -- & -- & -- & -- & -- & -- & -- \\
+($10 \times 25$) & BPSO & 461,0000 & 461,0000 & 461,0000 & 461,0000 & 0,0000 & 0,0000 & 0,0000 & 0,0000 & 0 \\
+ & BWO & 464,8000 & 473,5000 & 468,9767 & 469,8000 & 2,5127 & 3,2000 & 0,0000 & 0,0000 & 2 \\
 \midrule
-\textbf{Grande} & Óptimo Global HiGHS  & \textbf{915,2000} & -- & -- & -- & -- & -- & -- \\
-(20 Puntos / 50 Clientes) & BPSO & 920,3000 & 946,9000 & 930,6000 & 7,8947 & 0,0000 & 0,0000 & 0 \\
-& BWO & 933.1000 & 1076.4000 & 1006.1533 & 34.2454 & 0.0000 & 0.0000 & 0 \\
+\textbf{Grande} & Óptimo HiGHS & \textbf{915,2000} & -- & -- & -- & -- & -- & -- & -- & -- \\
+($20 \times 50$) & BPSO & 920,3000 & 946,9000 & 930,6000 & 926,2000 & 7,8947 & 11,9750 & 0,0000 & 0,0000 & 0 \\
+ & BWO & 933,1000 & 1076,4000 & 1006,1533 & 1003,5000 & 34,2454 & 57,2250 & 0,0000 & 0,0000 & 0 \\
 \bottomrule
 \end{tabular}
 
 \begin{tablenotes}\footnotesize
-    \item[1] \textbf{$\mu$}: Promedio aritmético de los valores de la función objetivo calculado sobre exactamente $N=30$ ejecuciones independientes.
-    \item[2] \textbf{$\sigma$}: Desviación estándar muestral; mide la dispersión del enjambre frente al nivel de explotación de soluciones.
-    \item[3] \textbf{SRate} (\textit{Success Rate}): Tasa de éxito. Proporción de ejecuciones independientes que alcanzaron de manera exacta el óptimo global.
-    \item[4] \textbf{SSpeed} (\textit{Search Speed}): Velocidad de búsqueda; métrica correspondiente al tiempo de convergencia generacional normalizado.
-    \item[5] \textbf{Outliers}: Cantidad de ejecuciones anómalas detectadas por el filtro estadístico IQR y reemplazadas dinámicamente en caliente.
+    \item[1] \textbf{$\mu$}: Promedio aritmético global de la función objetivo calculado sobre $N=30$ ejecuciones independientes.
+    \item[2] \textbf{$\sigma$}: Desviación estándar muestral de la muestra estabilizada.
+    \item[3] \textbf{IQR}: Rango intercuartílico utilizado por el filtro de control de calidad estadístico.
+    \item[4] \textbf{SR} (\textit{Success Rate}): Tasa de éxito; proporción de corridas que alcanzan el óptimo absoluto.
+    \item[5] \textbf{SS} (\textit{Search Speed}): Velocidad de búsqueda expresada mediante convergencia generacional normalizada.
+    \item[6] \textbf{Out}: Cantidad de valores atípicos detectados de forma dinámica y reemplazados en caliente.
 \end{tablenotes}
 \end{threeparttable}
 \end{table*}
