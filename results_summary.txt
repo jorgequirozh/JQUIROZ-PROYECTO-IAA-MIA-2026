@@ -1,71 +1,119 @@
 ================================================================================
-TWO-ECHELON MICROHUB LOCATION-ALLOCATION PROBLEM (TMLPA) BENCHMARK REGISTRY
+TMLPA EXPERIMENTAL CONFIGURATION REGISTRY
 ================================================================================
-Generated: June 2026
-Environment: Python 3.8+ / MiniZinc CLI (HiGHS 1.14.0 via Dell T140 Server)
-Sweeps per Metaheuristic: 30 Independent Runs (Isolated Random Seeds 43-72)
-Generational Depth: 100 Iterations per Sweep
+Execution Date: June 2026
+Computational Platform: Dell T140 Server / Intel Xeon E-2124 (4 Cores @ 3.30 GHz)
+Execution Environment: Python 3.8+ / MiniZinc CLI v2.8.x
+Exact Solver Core: HiGHS (v1.14.0, Parallelized, 4 Processing Threads)
+Metaheuristic Sample Settings: N = 30 Independent Runs / Seed Range: [43, 72]
+Generational Stopping Criteria: 100 Iterations per Run
+Dynamic Outlier Filter: [Q1 - 1.5 * IQR, Q3 + 1.5 * IQR] Execution Swap Protocol
+
+================================================================================
+1. SMALL SCALE: INSTANCE_SMALL.DZN (3 MICROHUBS X 5 CLIENTS)
+================================================================================
+--------------------------------------------------------------------------------
+1.1. Exact Global Bounding (HiGHS MILP Branch-and-Cut)
+--------------------------------------------------------------------------------
+Exact Global Optimum Cost: 84.20
+Infrastructure Activation Vector (y): [1, 0, 1]
 
 --------------------------------------------------------------------------------
-1. EXPERIMENT: INSTANCE_SMALL.DZN (3 HUBS X 5 CLIENTS)
+1.2. Metaheuristic Descriptive Matrices (Stable Sample N=30)
 --------------------------------------------------------------------------------
-MiniZinc Exact Global Optimum: 84.2000
-
-Metaheuristic Matrix Performance:
-                             Best    Worst     Mean   StdDev    SRate   SSpeed  Outliers
-Binary PSO (Baseline)       84.2000  84.2000  84.2000   0.0000   1.0000   1.0100         0
-Walrus Optimizer (Proposed) 84.2000  84.2000  84.2000   0.0000   1.0000   1.0100         0
-
-Academic Notes:
-Both solvers achieve absolute structural stability with identical metrics. The 
-Intelligent Greedy Routing module completely dominates this scale, guaranteeing 
-100% precision (SRate = 1.0000) and hitting the exact mathematical optimum 
-under 0.5 seconds. The Mann-Whitney-Wilcoxon p-value of 1.00000 confirms that there 
-is no statistically significant distribution variance at this scale.
+Metric                      Binary PSO Baseline     Binary Walrus (Mine)
+Best Cost                   84.2000                 84.2000
+Worst Cost                  84.2000                 84.2000
+Mean Cost                   84.2000                 84.2000
+Median                      84.2000                 84.2000
+Std. Dev.                   0.0000                  0.0000
+IQR                         0.0000                  0.0000
+SRate                       1.0000                  1.0000
+SSpeed                      1.0100                  1.0100
 
 --------------------------------------------------------------------------------
-2. EXPERIMENT: INSTANCE_MEDIUM.DZN (10 HUBS X 25 CLIENTS)
+1.3. Topological and Inferential Validations
 --------------------------------------------------------------------------------
-MiniZinc Exact Global Optimum: 452.0000
+BPSO Best Found Cost:       84.2000
+BPSO Best Layout (y):       [1, 0, 1]
+BPSO Optimization Gap:      0.00%
 
-Metaheuristic Matrix Performance:
-                             Best    Worst     Mean   StdDev    SRate   SSpeed  Outliers
-Binary PSO (Baseline)      461.0000 461.0000 461.0000   0.0000   0.0000   0.0000         0
-Walrus Optimizer (Proposed)464.8000 473.5000 468.9767   2.5127   0.0000   0.0000         2
+BWO Best Found Cost:        84.2000
+BWO Best Layout (y):        [1, 0, 1]
+BWO Optimization Gap:       0.00%
 
-Academic Notes:
-The exact mathematical optimum is established at 452.0000 via parallelized HiGHS 
-MILP branch mapping on the Intel Xeon E-2124. Both metaheuristic swarms failed 
-to discover this target due to a deceptive multi-modal local optimum sink. 
-The baseline BPSO demonstrates severe premature convergence, stagnation, and complete 
-loss of velocity diversity (StdDev = 0.0000), consistently trapping all 30 sweeps 
-at a localized cost plateau of 461.0000 (+1.99% optimization gap). The Walrus Optimizer 
-maintains active solution exploration (StdDev = 2.5127), yielding a best value of 
-464.8000 (+2.83% optimization gap) across non-linear allocation barriers. 
-A dynamic statistical filter identified and replaced 2 operational outliers at runtime 
-to protect sample integrity. The Mann-Whitney-Wilcoxon non-parametric evaluation 
-returns a U-Statistic of 0.00 and a p-value of 0.00000, revealing a highly significant 
-distributional divergence between the two algorithmic frameworks.
+Purged Outliers Swapped:    0
+Mann-Whitney-Wilcoxon Test: U-Statistic = 450.00 | p-value = 1.00000
+
+================================================================================
+2. MEDIUM SCALE: INSTANCE_MEDIUM.DZN (10 MICROHUBS X 25 CLIENTS)
+================================================================================
+--------------------------------------------------------------------------------
+2.1. Exact Global Bounding (HiGHS MILP Branch-and-Cut)
+--------------------------------------------------------------------------------
+Exact Global Optimum Cost: 452.00
+Infrastructure Activation Vector (y): [1, 1, 1, 0, 0, 0, 1, 0, 0, 1]
 
 --------------------------------------------------------------------------------
-3. EXPERIMENT: INSTANCE_LARGE.DZN (20 HUBS X 50 CLIENTS)
+2.2. Metaheuristic Descriptive Matrices (Stable Sample N=30)
 --------------------------------------------------------------------------------
-MiniZinc Exact Global Optimum: 915.2000
+Metric                      Binary PSO Baseline     Binary Walrus (Mine)
+Best Cost                   461.0000                464.8000
+Worst Cost                  461.0000                473.5000
+Mean Cost                   461.0000                468.9767
+Median                      461.0000                469.8000
+Std. Dev.                   0.0000                  2.5127
+IQR                         0.0000                  3.2000
+SRate                       0.0000                  0.0000
+SSpeed                      0.0000                  0.0000
 
-Metaheuristic Matrix Performance:
-                             Best    Worst     Mean   StdDev    SRate   SSpeed  Outliers
-Binary PSO (Baseline)      920.3000 946.9000 930.6000   7.8947   0.0000   0.0000         0
-Walrus Optimizer (Proposed)933.10001076.40001006.1533  34.2454   0.0000   0.0000         0
+--------------------------------------------------------------------------------
+2.3. Topological and Inferential Validations
+--------------------------------------------------------------------------------
+BPSO Best Found Cost:       460.99999999999983
+BPSO Best Layout (y):       [1, 1, 1, 0, 1, 0, 0, 0, 0, 1]
+BPSO Optimization Gap:      1.99%
 
-Academic Notes:
-The exact mathematical optimum is established at 915.2000 via parallelized HiGHS 
-MILP branch mapping on the Intel Xeon E-2124. The baseline BPSO achieved high 
-precision proximity, yielding a minimum cost of 920.3000 (+0.56% optimality gap) 
-with tight population grouping (StdDev = 7.8947). The proposed Walrus Optimizer 
-exhibits an expanded exploration tracking spread (StdDev = 34.2454), achieving a 
-best value of 933.1000 (+1.96% optimality gap) while maintaining dynamic population 
-diversity across high-dimensional architectural search layers. No statistical outliers 
-were triggered or required swapping during large instance execution. The Mann-Whitney-Wilcoxon 
-evaluation yields a U-Statistic of 10.50 and a p-value of 0.00000, confirming that the 
-distinct metaheuristic execution profiles exhibit statistically significant operational differences.
+BWO Best Found Cost:        464.79999999999995
+BWO Best Layout (y):        [1, 1, 1, 0, 1, 0, 0, 0, 0, 1]
+BWO Optimization Gap:       2.83%
+
+Purged Outliers Swapped:    2
+Mann-Whitney-Wilcoxon Test: U-Statistic = 0.00 | p-value = 0.00000
+
+================================================================================
+3. LARGE SCALE: INSTANCE_LARGE.DZN (20 MICROHUBS X 50 CLIENTS)
+================================================================================
+--------------------------------------------------------------------------------
+3.1. Exact Global Bounding (HiGHS MILP Branch-and-Cut)
+--------------------------------------------------------------------------------
+Exact Global Optimum Cost: 915.20
+Infrastructure Activation Vector (y): [0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
+
+--------------------------------------------------------------------------------
+3.2. Metaheuristic Descriptive Matrices (Stable Sample N=30)
+--------------------------------------------------------------------------------
+Metric                      Binary PSO Baseline     Binary Walrus (Mine)
+Best Cost                   920.3000                933.1000
+Worst Cost                  946.9000                1076.4000
+Mean Cost                   930.6000                1006.1533
+Median                      926.2000                1003.5000
+Std. Dev.                   7.8947                  34.2454
+IQR                         11.9750                 57.2250
+SRate                       0.0000                  0.0000
+SSpeed                      0.0000                  0.0000
+
+--------------------------------------------------------------------------------
+3.3. Topological and Inferential Validations
+--------------------------------------------------------------------------------
+BPSO Best Found Cost:       920.3000000000002
+BPSO Best Layout (y):       [0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0]
+BPSO Optimization Gap:      0.56%
+
+BWO Best Found Cost:        933.0999999999999
+BWO Best Layout (y):        [0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0]
+BWO Optimization Gap:       1.96%
+
+Purged Outliers Swapped:    0
+Mann-Whitney-Wilcoxon Test: U-Statistic = 10.50 | p-value = 0.00000
 ================================================================================
