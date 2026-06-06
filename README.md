@@ -1,7 +1,7 @@
 # Motor de Evaluación Comparativa para el Problema de Localización de Microhubs y Asignación Peatonal (TMLPA)
 
 Este repositorio contiene un entorno de evaluación académica completamente reproducible, diseñado para optimizar la localización y la asignación peatonal de microhubs temporales en operaciones de logística de última milla. 
-El proyecto evalúa el rendimiento de una variante avanzada del **Algoritmo de la Morsa Binario (BWO)** frente a una línea base tradicional de **Optimización por Enjambre de Partículas Binario (BPSO)**[cite: 580]. [cite_start]Ambas metaheurísticas son validadas exhaustivamente mediante la comparación directa con los límites matemáticos exactos globales recopilados a través del motor de programación lineal entera mixta (MILP) **HiGHS** en la plataforma MiniZinc.
+El proyecto evalúa el rendimiento de una variante avanzada del **Algoritmo de la Morsa Binario (BWO)** frente a una línea base tradicional de **Optimización por Enjambre de Partículas Binario (BPSO)**. Ambas metaheurísticas son validadas exhaustivamente mediante la comparación directa con los límites matemáticos exactos globales recopilados a través del motor de programación lineal entera mixta (MILP) **HiGHS** en la plataforma MiniZinc.
 
 ---
 
