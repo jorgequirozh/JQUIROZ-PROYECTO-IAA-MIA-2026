@@ -42,7 +42,6 @@ loss of velocity diversity (StdDev = 0.0000), consistently trapping all 30 sweep
 at a localized cost plateau of 461.0000 (+1.99% optimization gap). The Walrus Optimizer 
 maintains active solution exploration (StdDev = 2.5127), yielding a best value of 
 464.8000 (+2.83% optimization gap) across non-linear allocation barriers. 
-
 A dynamic statistical filter identified and replaced 2 operational outliers at runtime 
 to protect sample integrity. The Mann-Whitney-Wilcoxon non-parametric evaluation 
 returns a U-Statistic of 0.00 and a p-value of 0.00000, revealing a highly significant 
@@ -65,10 +64,8 @@ precision proximity, yielding a minimum cost of 920.3000 (+0.56% optimality gap)
 with tight population grouping (StdDev = 7.8947). The proposed Walrus Optimizer 
 exhibits an expanded exploration tracking spread (StdDev = 34.2454), achieving a 
 best value of 933.1000 (+1.96% optimality gap) while maintaining dynamic population 
-diversity across high-dimensional architectural search layers. 
-
-No statistical outliers were triggered or required swapping during large instance execution. 
-The Mann-Whitney-Wilcoxon evaluation yields a U-Statistic of 10.50 and a p-value of 
-0.00000, confirming that the distinct metaheuristic execution profiles exhibit 
-statistically significant operational differences.
+diversity across high-dimensional architectural search layers. No statistical outliers 
+were triggered or required swapping during large instance execution. The Mann-Whitney-Wilcoxon 
+evaluation yields a U-Statistic of 10.50 and a p-value of 0.00000, confirming that the 
+distinct metaheuristic execution profiles exhibit statistically significant operational differences.
 ================================================================================
