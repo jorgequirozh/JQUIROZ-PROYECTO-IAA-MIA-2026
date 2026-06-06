@@ -257,6 +257,79 @@ Los resultados de la prueba confirman diferentes comportamientos estructurales e
     \item Para la escala mayor, la prueba arrojó un $U$-statistic de $10.50$ y un $p$-value de $0.00000$. Esto indica que la proximidad superior de BPSO al límite global es estatísticamente significativa, mostrando una divergencia clara en el rendimiento entre ambos algoritmos a mayor escala.
 \end{itemize}
 
+\subsection{Trayectorias de convergencia y dispersión visual}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{execution_results/convergence_analysis_instance_small.png}
+        \caption{Convergencia Instancia Pequeña}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{execution_results/cost_metric_dispersion_analysis_instance_small.png}
+        \caption{Dispersion Instancia Pequeña}
+    \end{subfigure}
+    \caption{Perfiles de trayectoria y métricas de dispersión de diagramas de caja para la instancia pequeña($3 \times 5$),  que ilustran rutas de optimización idénticas y una convergencia perfecta al límite global.}
+    \label{fig:small_plots}
+\end{figure}
+
+Los registros visuales para la instancia pequeña (Figura~\ref{fig:small_plots}) muestran trayectorias de optimización idénticas. Ambos algoritmos convergen rápidamente al óptimo matemático exacto en las iteraciones iniciales, manteniendo una varianza cero en todas las generaciones posteriores.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{execution_results/convergence_analysis_instance_medium.png}
+        \caption{Convergencia Instancia Mediana}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{execution_results/cost_metric_dispersion_analysis_instance_medium.png}
+        \caption{Dispersión Instancia Mediana}
+    \end{subfigure}
+    \caption{Perfiles de trayectoria y métricas de dispersión de diagramas de caja para la instancia media ($10 \times 25$). BPSO muestra estancamiento, mientras que BWO mantiene una varianza exploratoria.}
+    \label{fig:medium_plots}
+\end{figure}
+
+Para la magnitud media (Figura~\ref{fig:medium_plots}), los gráficos de convergencia muestran la vulnerabilidad de BPSO al estancamiento prematuro, quedando una línea plana rápidamente en $461.0000$, mostrando una completa pérdida de diversidad de población. Mientras que la trayectoria de BWO muestra una exploración estructural activa, con una distribución más amplia entre las generaciones. 
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{execution_results/convergence_analysis_instance_large.png}
+        \caption{Convergencia Instancia Grande}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{execution_results/cost_metric_dispersion_analysis_instance_large.png}
+        \caption{Dispersion Instancia Grande}
+    \end{subfigure}
+    \caption{perfiles de trayectoria y métricas de dispersión de diagramas de caja para la instancia mayor ($20 \times 50$), mostrando la explotación local efectiva de BPSO y la exploración extendida de BWO}
+    \label{fig:large_plots}
+\end{figure}
+
+En la magnitud mayor (Figura~\ref{fig:large_plots}), las curvas de convergencia muestran que BPSO efectivamente aprovecha su mecánica de explotación local. Esto le permite al enjambre acercarse de manera estable al límite global, alzando una distribución estrecha cerca del piso de $920.3000$. En el caso de BWO, se aprecia un camino exploratorio más extendido, manteniendo una distribución de soluciones más amplia a través del límite de 100 iteraciones.
+
+\section{Discusión y Compensaciones Algorítmicas}
+\label{sec:discussion}
+Los resultados del experimento muesran una clara compensación entre mecanismos de exploración y explotación entre espacios de asignación-ubicación discretos. BPSO se apoya fuertemente en la matriz de transformación sigmoidea, junto a componentes fijos de aceleración social y cognitiva. Mientras que esta estructura incrementa el riesgo de convergencia prematura (como se evidenció en el estancamiento casi total en $461.0000$ para la instancia mediana) provee una ventaja competitiva relevante para topografías de mayores dimensiones donde la gradiente local de explotación es importante. En la instancia mayor, esta intensa búsqueda local permitió a BPSO encontrar un conjunto solución más cercano al límite gobal establecido  (brecha de $+0.56\%$).
+
+En contraste, BWO incorpora un conjunto más diverso de fases de comportamiento, ntrast, the Binary Walrus Optimizer incorporates a more diverse set of behavioral phases, utilizing dynamic migration shifts, ajustes de defensa de seguridad, y modelado de estado de combate. Esta variabilidad arquitectural previene el colapso poblacional temprano y apoya la exploración sostenida a través de escenarios de búsqueda complejos, lo que le ayudó a envitar fácilmente el estancamiento mostrado por BPSO en la instancia media. 
+
+Sin embargo, esta alta varianza exploratoria se transforma en una desventaja bajo presupuestos iterativos más restringidos en espacios dimensionales mayores. En la instancia mayor, BWO repartió su foco de búsqueda en demasiadas capas, dejando una cantidad insuficiente de generaciones para explorar completamente regiones localizadas. Esta tasa menor de convergencia resultó en una varianza final mayor ($\sigma = 34.2454$) y una bracha de optimización mayor ($+1.96\%$). Estos hallazgos sugieren que BWO podría beneficiarse de un mecanismo de discretización adaptativo o acelerado para mejorar su comportamiento de explotación a medida que el enjambre se acerca a etapas generacionales posteriores.
+
+\section{Conclusión}
+\label{sec:conclusion}
+Este estudio evaluó el Problema de Localización y Asignación de Microhubs de Dos Escalones (TMLPA) evaluando el Algoritmo de la Morsa Binario (BWO) contra una línea base de Optimización por Enjambre de Partículas Binario (BPSO) bajo límites globales exactos, resueltos mediante el motor de HiGHS MILP engine. Este diseño experimental integró un módulo automatizado de reparación de restricciones e implementó un protocolo dinámico de manejo de valores atípicos para garantizar la consistencia estadística.($N=30$). 
+
+Los hallazgos empíricos muestran que mientras que ambas metaheurísticas fácilmente resuelven problemas a menor escala, su rendimiento diverge significativamente a medida que las dimensiones del problema escalan. BPSO demuestra una gran capacidad de explotación local a gran escala, logrando una brecha de optimización ajustada de $+0.56\%$, pero sigue siendo muy vulnerable a la convergencia prematura en topografías multimodales de escala media. Por el contrario, BWO destaca por preservar la diversidad de la población y evitar trampas locales tempranas, pero presenta tasas de explotación más lentas en espacios de búsqueda de alta dimensión. 
+
 
 %------------------------------------
 \bibliography{refs}
