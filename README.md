@@ -11,14 +11,16 @@ https://github.com/jorgequirozh/JQUIROZ-PROYECTO-IAA-MIA-2026
 ```
 ```text
 Presentación
-Youtube
+https://youtu.be/osmpW6ndVac
 ```
-
+---
 ## Estructura del Directorio del Repositorio
 
 ```text
 .
 ├── README.md                                 # Manual operativo y guía de replicación
+├── JQUIROZ-IAA-MIA-2026.pdf                  # Informe en formato PDF, renderizado del código fuente LaTeX 
+├── JQUIROZ-IAA-MIA-2026.pptx                 # Presentación PowerPoint expuesta en el enlace de Youtube anterior
 ├── TMLPA_Optimization.ipynb                  # Notebook Jupyter principal con los solucionadores y el motor ejecutor
 ├── results_summary.txt                       # Registro central de datos consolidados (Descriptivos e Inferenciales)
 ├── execution_results/                        # Logs de ejecución en bruto y figuras de calidad de publicación
