@@ -4,6 +4,15 @@ Este repositorio contiene un entorno de evaluación académica completamente rep
 El proyecto evalúa el rendimiento de una variante avanzada del **Algoritmo de la Morsa Binario (BWO)** frente a una línea base tradicional de **Optimización por Enjambre de Partículas Binario (BPSO)**. Ambas metaheurísticas son validadas exhaustivamente mediante la comparación directa con los límites matemáticos exactos globales recopilados a través del motor de programación lineal entera mixta (MILP) **HiGHS** en la plataforma MiniZinc.
 
 ---
+## Recursos externos
+```text
+URL del repositorio
+https://github.com/jorgequirozh/JQUIROZ-PROYECTO-IAA-MIA-2026
+```
+```text
+Presentación
+Youtube
+```
 
 ## Estructura del Directorio del Repositorio
 
